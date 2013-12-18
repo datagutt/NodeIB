@@ -1,0 +1,29 @@
+{
+  "name": "NodeIB",
+  "version": "0.0.1",
+  "description": "Node.js imageboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/datagutt/NodeIB.git"
+  },
+  "keywords": [
+    "imageboard"
+  ],
+  "author": "datagutt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/datagutt/NodeIB/issues"
+  },
+  "dependencies": {
+    "async": "~0.2.9",
+    "express": "~3.4.7",
+    "nconf": "~0.6.9",
+    "express-resource": "~1.0.0",
+    "swig": "~1.2.2",
+    "throwsexception-mongoose-redis-cache": "0.0.3"
+  }
+}
