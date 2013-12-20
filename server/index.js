@@ -44,7 +44,7 @@ function init(port, host){
 		setup(app, models);
 		
 		app.listen(port, function(){
-			console.log('%s listening at %s', app.name, '0.0.0.0:' + port);
+			console.log('%s listening at %s', 'NodeIB', '0.0.0.0:' + port);
 		});
 	})
 }
