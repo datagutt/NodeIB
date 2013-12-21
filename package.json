@@ -25,6 +25,9 @@
     "express-resource": "~1.0.0",
     "swig": "~1.2.2",
     "throwsexception-mongoose-redis-cache": "0.0.3",
-    "tripcode": "~1.1.0"
+    "tripcode": "~1.1.0",
+    "winston": "~0.7.2",
+    "request": "~2.30.0",
+    "qs": "~0.6.6"
   }
 }

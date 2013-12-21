@@ -9,9 +9,14 @@
 	nconf.defaults({
 		'api': {
 			'port': 3000
+		},
+		'client': {
+			'port': 3100
 		}
 	});
 	
-	var server = require('./server/');
+	var server = require('./server'),
+		client = require('./client');
 	server(nconf.get('api:port'));
+	client(nconf.get('client:port'));
 }());

@@ -1,11 +1,11 @@
 var async = require('async');
-module.exports = function(app, api){
+module.exports = function(app, apiClient){
 	var routes = [
 		'threads'
 	];
 	
 	async.forEach(routes, function(route, next){
-		var file = require('./' + route)(app, api);
+		require('./' + route)(app, apiClient);
 		next();
 	}, function(err, results){
 		console.log('All routes loaded!');

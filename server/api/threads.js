@@ -23,7 +23,7 @@ module.exports = function(db){
 				offset = page * perPage,
 				find = {};
 			
-			if(board){
+			if(board && board !== 'all'){
 				find['board'] = board;
 			}
 			
@@ -56,7 +56,7 @@ module.exports = function(db){
 				'subject': params.subject,
 				'comment': params.comment,
 				'sticky': params.sticky,
-				'ip': params.ip
+				'ip': params.ip,
 				'closed': params.closed
 			});
 			
