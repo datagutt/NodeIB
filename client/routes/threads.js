@@ -4,7 +4,7 @@ module.exports = function threads(app, apiClient){
 			page = req.query.page;
 		apiClient.getIndexThreads(board, page, function(err, threads){
 			res.render('threads.html', {
-				'board': board
+				'board': board,
 				'threads': threads
 			});
 		});

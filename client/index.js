@@ -17,6 +17,7 @@ function setup(app, siteName){
 	app.use(express.json());
 	app.use(express.cookieParser());
 	app.use(express.session({secret: 'secret'}));
+	app.use(express.favicon());
 	app.use(app.router);
 	
 	// Config
