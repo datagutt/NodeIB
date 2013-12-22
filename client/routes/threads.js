@@ -3,10 +3,10 @@ module.exports = function threads(app, apiClient){
 		var board = req.params.board,
 			page = req.query.page;
 		apiClient.getIndexThreads(board, page, function(err, threads){
-			 res.render('threads.html', {
-			 	'board': board
+			res.render('threads.html', {
+				'board': board
 				'threads': threads
-			 });
+			});
 		});
 	});
 }
