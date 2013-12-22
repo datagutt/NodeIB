@@ -11,12 +11,13 @@
 			'port': 3000
 		},
 		'client': {
-			'port': 3100
+			'port': 3100,
+			'siteName': 'NodeIB'
 		}
 	});
 	
 	var server = require('./server'),
 		client = require('./client');
 	server(nconf.get('api:port'));
-	client(nconf.get('client:port'));
+	client(nconf.get('client:port'), nconf.get('client:siteName'));
 }());

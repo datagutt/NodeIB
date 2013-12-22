@@ -1,7 +1,8 @@
 var async = require('async');
 module.exports = function(app, apiClient){
 	var routes = [
-		'threads'
+		'threads',
+		'boards'
 	];
 	
 	async.forEach(routes, function(route, next){

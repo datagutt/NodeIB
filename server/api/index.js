@@ -1,7 +1,8 @@
 var async = require('async');
 module.exports = function(db, _callback){
 	var files = {
-		'threads': 'threads.js'
+		'threads': 'threads.js',
+		'boards': 'boards.js'
 	};
 	var models = {};
 	

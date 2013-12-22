@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% set stylesheets = ["boards.css"] %}
+{% block content %}
+<div class="pure-u-1">
+	<h1>Boards</h1>
+	<div id="boards">
+{% for board in boards %}
+		<div class="board">
+			<header>
+				<h3><a href="/{{ board.shortname'}}">{{ board.name }}</a></h3>
+			</header>
+		</div>
+{% endfor %}
+	</div>
+</div>
+{% endblock %}

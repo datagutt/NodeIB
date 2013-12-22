@@ -23,6 +23,20 @@ function parseJson(json, next, success){
     success(json);
 }
 module.exports = {
+	getBoards: function(_callback){
+		var route = '/boards';
+
+		request({
+			method: 'get',
+			uri: apiUrl + route
+		}, function(err, response, json){
+			if(!checkResponse(err, response, _callback)) return;
+
+            parseJson(json, _callback, function(json){
+                _callback(null, json);
+            });
+		});
+	},
 	getIndexThreads: function(board, page, _callback){
 		var route = '/threads/';
 
@@ -35,7 +49,7 @@ module.exports = {
 		if(page){
 			route += '/' + page;
 		}
-		console.log(apiUrl + route);
+
 		request({
 			method: 'get',
 			uri: apiUrl + route

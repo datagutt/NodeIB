@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<title>{{ siteName }}</title>
+	<meta charset="utf8" /><link href="http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic" rel="stylesheet" type="text/css">
+	<link href="/assets/stylesheets/pure-min.css" rel="stylesheet" />
+	<link href="/assets/stylesheets/site.css" rel="stylesheet" />
+{% for stylesheet in stylesheets %}
+	<link href="/assets/stylesheets/{{stylesheet}}" rel="stylesheet" />
+{% endfor %}
+	<link href="/assets/stylesheets/handheld.css" media="screen and (max-device-width:40em)" rel="stylesheet">
+	<link media="handheld" href="/assets/stylesheets/handheld.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+		<script type="text/javascript" src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<style type="text/css">header,nav,section,article,aside,footer,hgroup,main { display: block;}</style>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<![endif]-->
+</head>
+<body>
+<div id="container">
+	<header id="top">
+		<div class="pure-menu pure-menu-open pure-menu-horizontal">
+			<a href="/" class="pure-menu-heading">{{ siteName }}</a>
+			<ul role="navigation">
+				<li class="pure-menu-selected"><a href="/">Home</a></li>
+			</ul>
+		</div>
+	</header>
+	<div class="pure-g-r">
+		<main>
+			<div id="content">
+{% block content %}{% endblock %}
+			</div>
+		</main>
+	</div>
+	<footer id="footer" class="pure-g-r">
+		<div class="pure-u-2-5">
+			<p>{{ siteName }} &copy; {{ now()|date('Y') }}</p>
+		</div>
+	</footer>
+</div>
+<!-- Dependencies -->
+<!-- Site-specific -->
+<script src="/assets/javascripts/ID.js"></script>
+<script src="/assets/javascripts/bootstrap.js"></script>
+{% for script in scripts %}
+<script src="/assets/javascripts/{{ script }}"></script>
+{% endfor %}
+</script>
+</body>
+</html>
