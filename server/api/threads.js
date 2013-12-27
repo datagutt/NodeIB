@@ -44,13 +44,14 @@ module.exports = function(db){
 			});
 		},
 		newThread: function(params, _callback){
-			var pp = params.name.split('#');
+			var pp = params.name.split('#'),
+				tripcode;
 			if(pp.length > 1){
-				var tripcode = tripc(pp[1]);
+				tripcode = tripc(pp[1]);
 			}
 			
 			var t = new Thread({
-				'name': params.name,
+				'name': pp.length > 0 ? pp[0] : params.name,
 				'tripcode': tripcode,
 				'email': params.email,
 				'subject': params.subject,
