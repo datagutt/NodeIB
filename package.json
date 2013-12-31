@@ -28,6 +28,7 @@
     "tripcode": "~1.1.0",
     "winston": "~0.7.2",
     "request": "~2.30.0",
-    "qs": "~0.6.6"
+    "qs": "~0.6.6",
+    "express-winston": "~0.2.1"
   }
 }

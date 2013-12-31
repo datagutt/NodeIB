@@ -1,11 +1,11 @@
 var express = require('express'),
 	swig = require('swig'),
 	winston = require('winston'),
-	fs = require('fs');
+	expressWinston = require('express-winston'),
+	fs = require('fs')
 var app,
 	apiClient = require('./apiClient');
 function setup(app, siteName){
-	app.use(express.logger({format: 'dev'}));
 	app.engine('html', swig.renderFile);
 	app.set('view engine', 'html');
 	app.set('view cache', false);
@@ -19,6 +19,16 @@ function setup(app, siteName){
 	app.use(express.session({secret: 'secret'}));
 	app.use(express.favicon());
 	app.use(app.router);
+	app.use(expressWinston.errorLogger({
+		transports: [
+			new winston.transports.Console({
+				json: true,
+				colorize: true
+			})
+		],
+		meta: true,
+		msg: "HTTP {{req.method}} {{req.url}}"
+	}));
 	
 	// Config
 	app.locals.siteName = siteName;
