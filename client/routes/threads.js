@@ -9,4 +9,8 @@ module.exports = function threads(app, apiClient){
 			});
 		});
 	});
+	app.post('/:board', function(req, res){
+		var board = req.params.board;
+		apiClient.newThread(board, {});
+	});
 }

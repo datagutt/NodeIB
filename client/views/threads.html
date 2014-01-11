@@ -23,5 +23,14 @@
 			<button type="submit" class="pure-button pure-button-primary">Submit</button>
 		</fieldset>
 	</form>
+	<div class="threads">
+		{% if threads.length %}
+			{% for thread in threads %}
+				{% include "./thread.html" with thread only %}
+			{% endfor %}
+		{% else %}
+			<p>This board is empty.</p>
+		{% endif %}
+	</div>
 </div>
 {% endblock %}

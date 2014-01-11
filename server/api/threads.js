@@ -1,9 +1,11 @@
 var tripc = require('tripcode');
 module.exports = function(db){
 	var Schema = db.Schema;
-	var ThreadSchema = new Schema({
-		'op': Boolean,
-		'sticky': Boolean,
+	var PostSchema = new Schema({
+		'board': String,
+		'isParent': Boolean,
+		'parent': Schema.ObjectId,
+		'op': {type: Boolean, default: 0},
 		'ip': String,
 		'name': String,
 		'tripcode': String,
@@ -12,9 +14,8 @@ module.exports = function(db){
 		'comment': String,
 		'time': {type: Date, default: Date.now},
 		'closed': 0
-	}), Thread;
-	ThreadSchema.set('redisCache', true);
-	Thread = db.model('Thread', ThreadSchema);
+	}), Post;
+	Post = db.model('Post', PostSchema);
 
 	return {
 		getIndexThreads: function(board, page, _callback){
@@ -26,8 +27,9 @@ module.exports = function(db){
 			if(board && board !== 'all'){
 				find['board'] = board;
 			}
+			find['isParent'] = false;
 			
-			Thread.find(find)
+			Post.find(find)
 			.sort({lastUpdate: -1})
 			.skip(offset)
 			.limit(perPage)
@@ -37,10 +39,27 @@ module.exports = function(db){
 			});
 		},
 		getThread: function(id, _callback){
-			Thread.findOne({_id: id})
+			var find = {};
+			
+			find['_id'] = id;
+			find['isParent'] = false;
+
+			Post.findOne(find)
 			.lean()
 			.exec(function(err, thread){
 				_callback(err, thread);
+			});
+		},
+		getThreadReplies: function(id, _callback){
+			var find = {};
+			
+			find['parent'] = id;
+			find['isParent'] = true;
+			
+			Post.findOne(find)
+			.lean()
+			.exec(function(err, replies){
+				_callback(err, replies);
 			});
 		},
 		newThread: function(params, _callback){
@@ -50,7 +69,9 @@ module.exports = function(db){
 				tripcode = tripc(pp[1]);
 			}
 			
-			var t = new Thread({
+			var t = new Post({
+				'parent': 0,
+				'op': 1,
 				'name': pp.length > 0 ? pp[0] : params.name,
 				'tripcode': tripcode,
 				'email': params.email,
@@ -61,7 +82,7 @@ module.exports = function(db){
 				'closed': params.closed
 			});
 			
-			thread.save(function(err, thread){
+			t.save(function(err, thread){
 				_callback(err, thread);
 			});
 		}
