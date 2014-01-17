@@ -9,7 +9,6 @@ module.exports = function threads(app, apiClient){
 				boardName = board.name.toLowerCase();
 			}
 			apiClient.getIndexThreads(boardName, page, function(err, threads){
-				console.log(threads);
 				res.render('threads.html', {
 					'board': board,
 					'threads': threads
