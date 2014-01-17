@@ -4,8 +4,8 @@
 	<title>
 	{% if title %}{{ title }} - {% endif %}
 	{% if board %}
-	  {% if not title %}/{{ board }}/ - {% endif %}
-	  {{ board.title }}
+	  {% if not title %}/{{ board.shortname }}/ - {% endif %}
+	  {{ board.name }}
 	{% else %}
 	  {{ siteName }}
 	{% endif %}

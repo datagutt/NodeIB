@@ -5,4 +5,11 @@ module.exports = function boards(app, api){
 			res.send(boards);
 		});
 	});
+	app.get('/board/:shortname', function(req, res){
+		var BoardApi = api.boards,
+			shortname = req.params.shortname;
+		BoardApi.getBoard(shortname, function(err, board){
+			res.send(board);
+		});
+	});
 }

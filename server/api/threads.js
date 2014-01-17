@@ -12,6 +12,7 @@ module.exports = function(db){
 		'email': String,
 		'subject': String,
 		'comment': String,
+		'file': String,
 		'time': {type: Date, default: Date.now},
 		'closed': 0
 	}), Post;
@@ -56,7 +57,7 @@ module.exports = function(db){
 			find['parent'] = id;
 			find['isParent'] = true;
 			
-			Post.findOne(find)
+			Post.find(find)
 			.lean()
 			.exec(function(err, replies){
 				_callback(err, replies);

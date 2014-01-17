@@ -1,3 +1,18 @@
-<article id="thread-{{ thread._id }}" class="thread">
-{{ }}
+<article id="thread-{{ thread._id }} thread">
+	<div id="first-post" class="post">
+		<header>
+			<h2 id="thread-subject">{{ thread.subject }}</h2>
+		</header>
+		{% if thread.file %}<img src="{{ thread.file }}" class="post-image">{% endif %}
+		<span class="comment">{{ thread.comment }}</span>
+	</div>
+	{% for post in thread.replies %}
+	<div class="post">
+		<header>
+			<h2 class="post-subject">{{ post.subject }}</h2>
+		</header>
+		{% if post.file %}<img src="{{ post.file }}" class="post-image">{% endif %}
+		<span class="comment">{{ post.comment }}</span>
+	</div>
+	{% endfor %}
 </article>

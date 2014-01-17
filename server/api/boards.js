@@ -14,6 +14,13 @@ module.exports = function(db){
 			.exec(function(err, boards){
 				_callback(err, boards);
 			});
+		},
+		getBoard: function(shortname, _callback){
+			Board.findOne({'shortname': shortname})
+			.lean()
+			.exec(function(err, boards){
+				_callback(err, boards);
+			});
 		}
 	};
 };

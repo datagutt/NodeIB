@@ -24,9 +24,9 @@
 		</fieldset>
 	</form>
 	<div class="threads">
-		{% if threads.length %}
+		{% if threads %}
 			{% for thread in threads %}
-				{% include "./thread.html" with thread only %}
+				{% include "./thread.html" %}
 			{% endfor %}
 		{% else %}
 			<p>This board is empty.</p>

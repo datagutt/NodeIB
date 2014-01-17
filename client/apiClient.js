@@ -37,6 +37,24 @@ module.exports = {
             });
 		});
 	},
+	getBoard: function(shortname, _callback){
+		var route = '/board/';
+
+		if(shortname){
+			route += shortname;
+		}
+		
+		request({
+			method: 'get',
+			uri: apiUrl + route
+		}, function(err, response, json){
+			if(!checkResponse(err, response, _callback)) return;
+
+            parseJson(json, _callback, function(json){
+                _callback(null, json);
+            });
+		});
+	},
 	getIndexThreads: function(board, page, _callback){
 		var route = '/threads/';
 
