@@ -19,8 +19,8 @@
     "url": "https://github.com/datagutt/NodeIB/issues"
   },
   "dependencies": {
-    "async": "~0.2.9",
-    "express": "~3.4.7",
+    "async": "~0.2.10",
+    "express": "~3.4.8",
     "nconf": "~0.6.9",
     "express-resource": "~1.0.0",
     "swig": "~1.2.2",
