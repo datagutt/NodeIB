@@ -1,4 +1,22 @@
-var tripc = require('tripcode');
+var tripcode = require('tripcode'),
+	tripsalt = nconf.get('api:tripsalt');
+var formatPost = function(post){
+	var tripindex = post.name.indexOf('#');
+	if(tripindex > -1){
+		var trip = post.name.substr(tripindex + 1),
+			secure = trip.indexOf('#') === 0;
+
+		if(secure){
+			trip = crypto.createHash('sha1')
+			.update(trip.substr(1) + tripsalt)
+			.digest('base64')
+			.toString();
+		}
+		post.tripcode = (secure ? '!!' : '!') + tripcode(trip);
+		post.name = post.name.slice(0, tripindex);
+	}
+	return post;
+};
 module.exports = function(db){
 	var Schema = db.Schema;
 	var PostSchema = new Schema({
@@ -36,6 +54,7 @@ module.exports = function(db){
 			.limit(perPage)
 			.lean()
 			.exec(function(err, threads){
+				threads[0] = formatPost(threads[0]);
 				_callback(err, threads);
 			});
 		},
@@ -48,6 +67,7 @@ module.exports = function(db){
 			Post.findOne(find)
 			.lean()
 			.exec(function(err, thread){
+				thread = formatPost(thread);
 				_callback(err, thread);
 			});
 		},
@@ -64,24 +84,18 @@ module.exports = function(db){
 			});
 		},
 		newThread: function(params, _callback){
-			var pp = params.name.split('#'),
-				tripcode;
-			if(pp.length > 1){
-				tripcode = tripc(pp[1]);
-			}
-			
-			var t = new Post({
+			var t = new Post(formatPost({
 				'parent': 0,
 				'op': 1,
-				'name': pp.length > 0 ? pp[0] : params.name,
-				'tripcode': tripcode,
+				'name': params.name,
+				'tripcode': '',
 				'email': params.email,
 				'subject': params.subject,
 				'comment': params.comment,
 				'sticky': params.sticky,
 				'ip': params.ip,
 				'closed': params.closed
-			});
+			}));
 			
 			t.save(function(err, thread){
 				_callback(err, thread);

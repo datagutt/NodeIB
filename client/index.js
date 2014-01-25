@@ -2,7 +2,7 @@ var express = require('express'),
 	swig = require('swig'),
 	winston = require('winston'),
 	expressWinston = require('express-winston'),
-	fs = require('fs')
+	fs = require('fs');
 var app,
 	apiClient = require('./apiClient');
 function setup(app, siteName){
@@ -37,7 +37,12 @@ function setup(app, siteName){
 	app.locals.now = function(){
 		return new Date();
 	};
-	app.locals.timeago = require('timeago');
+	/* Wrap in functin because timeago doesn't handle undefined */
+	var timeago = require('timeago');
+	app.locals.timeago = function(time){
+		var ago = timeago(new Date(+time));
+		return ago;
+	};
 
 	setupRoutes();
 	

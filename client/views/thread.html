@@ -1,18 +1,36 @@
 <article id="thread-{{ thread._id }} thread">
 	<div id="first-post" class="post">
-		<header>
+		<header class="post-header">
 			<h2 id="thread-subject">{{ thread.subject }}</h2>
+			<h3>
+				<span class="posted-by">
+					<span class="username">{{ thread.name }}</span>
+					{% if thread.tripcode %}
+					<span class="tripcode">{{ thread.tripcode }}</span>
+					{% endif %}
+				</span>
+				wrote
+				<span class="post-ago">{{ timeago(thread.time) }}</span>
+			</h3>
 		</header>
-		{% if thread.file %}<img src="{{ thread.file }}" class="post-image">{% endif %}
-		<span class="comment">{{ thread.comment }}</span>
+		<div class="post-image">{% if thread.file %}<img src="{{ thread.file }}">{% endif %}</div>
+		<div class="post-body">{{ thread.comment }}</div>
 	</div>
 	{% for post in thread.replies %}
-	<div class="post">
-		<header>
-			<h2 class="post-subject">{{ post.subject }}</h2>
+	<div class="thread-reply">
+		<header class="post-header">
+			<h3>
+				<span class="posted-by">
+					<span class="username">{{ post.name }}</span>									{% if post.tripcode %}
+					<span class="tripcode">{{ post.tripcode }}</span>
+					{% endif %}
+				</span>
+				wrote
+				<span class="post-ago">{{ timeago(post.time) }}</span>
+			</h3>
 		</header>
-		{% if post.file %}<img src="{{ post.file }}" class="post-image">{% endif %}
-		<span class="comment">{{ post.comment }}</span>
+		<div class="post-image">{% if post.file %}<img src="{{ post.file }}">{% endif %}</div>
+		<div class="post-body">{{ post.comment }}</div>
 	</div>
 	{% endfor %}
 </article>

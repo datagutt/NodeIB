@@ -3,7 +3,6 @@ var express = require('express'),
 	fs = require('fs'),
 	mongoose = require('mongoose'),
 	mongooseRedisCache = require('throwsexception-mongoose-redis-cache');
-
 var app,
 	api = require('./api');
 function setup(app, models){

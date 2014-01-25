@@ -8,13 +8,15 @@
 	nconf.file('default', 'config/' + global.env + '.json');
 	nconf.defaults({
 		'api': {
-			'port': 3000
+			'port': 3000,
+			'tripsalt': '3895ha985hva9v5hav5+jav5'
 		},
 		'client': {
 			'port': 3100,
 			'siteName': 'NodeIB'
 		}
 	});
+	global.nconf = nconf;
 	
 	var server = require('./server'),
 		client = require('./client');
