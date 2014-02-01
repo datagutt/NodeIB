@@ -2,9 +2,9 @@ module.exports = function multipart(req, res, next){
 	if(!req.files){
 		req.files = {};
 	}
-    if(!req.body){
+	if(!req.body){
 		req.body = {};
-    }
+	}
 
 	if(req.busboy){
 		req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype){
@@ -29,7 +29,7 @@ module.exports = function multipart(req, res, next){
 		});
 		req.busboy.on('field', function(fieldname, val) {
 			req.body[fieldname] = val;
-        });
+		});
 		req.busboy.on('end', function(){
 			next();
 		});
