@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="pure-u-1">
-	<form id="thread-form" method="post" enctype="multipart/form-data" class="pure-form pure-form-stacked">
+	<form id="thread-form" method="post" enctype="multipart/form-data"  action="/{{ board.shortname}}" class="pure-form pure-form-stacked">
 		<fieldset>
-			<label for="name">Name</label>
-			<input id="name" type="text" size="25" maxlength="35" autocomplete="off" placeholder="Name">
+			<input type="hidden" name="_csrf" value="{{csrftoken}}">
 
-			<label for="email">Email </label>
-			<input id="email" type="email" placeholder="Email">
+			<label for="name">Name</label>
+			<input name="name" type="text" size="25" maxlength="35" autocomplete="off" placeholder="Name">
+
+			<label for="email">Email</label>
+			<input name="email" type="email" placeholder="Email">
 
 			<label for="subject">Subject</label>
-			<input id="subject" type="text" placeholder="Subject">
+			<input name="subject" type="text" placeholder="Subject">
 			
 			<label for="thread-content">Content</label>
 			<textarea id="thread-content" name="thread-content" type="text" rows="5" cols="35" placeholder="Content"></textarea>

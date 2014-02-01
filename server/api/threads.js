@@ -1,5 +1,29 @@
 var tripcode = require('tripcode'),
+	uuid = require('node-uuid');
 	tripsalt = nconf.get('api:tripsalt');
+var uploadFile = function(file, _callback){
+	if(file && file.data){
+		var buffer = new Buffer(file.data, 'base64');
+
+		/*
+		if(buffer.length > parseInt(MAX_FILE_SIZE, 10) * 1024){
+
+		}
+		*/
+
+		var filename = 'upload-' + uuid.v1() + path.extname(file.name);
+
+		fs.readfile(params.file, function(err, data){
+			var fullname = '../uploads/fullsize/' + filename;
+
+			fs.writeFile(fullname, buffer, function(err){
+				_callback(err, fullname);
+			})
+		});
+	}else{
+		_callback(new Error('invalid file'));
+	}
+}
 var formatPost = function(post){
 	var tripindex = post.name.indexOf('#');
 	if(tripindex > -1){
@@ -34,6 +58,7 @@ module.exports = function(db){
 		'time': {type: Date, default: Date.now},
 		'closed': 0
 	}), Post;
+	PostSchema.set('redisCache', true);
 	Post = db.model('Post', PostSchema);
 
 	return {
@@ -84,7 +109,7 @@ module.exports = function(db){
 			});
 		},
 		newThread: function(params, _callback){
-			var t = new Post(formatPost({
+			var p = {
 				'parent': 0,
 				'op': 1,
 				'name': params.name,
@@ -95,10 +120,17 @@ module.exports = function(db){
 				'sticky': params.sticky,
 				'ip': params.ip,
 				'closed': params.closed
-			}));
-			
-			t.save(function(err, thread){
-				_callback(err, thread);
+			};
+
+			uploadFile(params.file, function(err, filename){
+				if(filename){
+					p['file'] = filename;
+				}
+				var t = new Post(formatPost(p));
+
+				t.save(function(err, thread){
+					_callback(err, thread);
+				});
 			});
 		}
 	};

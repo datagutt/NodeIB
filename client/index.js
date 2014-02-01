@@ -1,7 +1,10 @@
 var express = require('express'),
+	busboy = require('connect-busboy');
+	multipart = require('./multipart'),
 	swig = require('swig'),
 	winston = require('winston'),
 	expressWinston = require('express-winston'),
+	path = require('path'),
 	fs = require('fs');
 var app,
 	apiClient = require('./apiClient');
@@ -15,9 +18,23 @@ function setup(app, siteName){
 	app.use(express.methodOverride());
 	app.use(express.urlencoded())
 	app.use(express.json());
+	app.use(busboy());
+	app.use(multipart);
 	app.use(express.cookieParser());
-	app.use(express.session({secret: 'secret'}));
+	app.use(express.session({
+		secret: 'secret',
+		cookie: {httpOnly: true}
+	}));
 	app.use(express.csrf());
+	app.use(function(req, res, next){
+		console.log(req.body._csrf, res.locals.csrftoken);
+		res.locals.csrftoken = req.csrfToken();
+
+		// Disable framing
+		res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+
+		next();
+	});
 	app.use(express.favicon());
 	app.use(app.router);
 	app.use(expressWinston.errorLogger({
@@ -37,7 +54,7 @@ function setup(app, siteName){
 	app.locals.now = function(){
 		return new Date();
 	};
-	/* Wrap in functin because timeago doesn't handle undefined */
+	/* Wrap in function because timeago doesn't handle undefined */
 	var timeago = require('timeago');
 	app.locals.timeago = function(time){
 		var ago = timeago(new Date(+time));
