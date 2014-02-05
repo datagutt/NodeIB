@@ -17,9 +17,9 @@ module.exports = function threads(app, apiClient){
 		});
 	});
 	app.post('/:board', function(req, res){
-		console.log(req.body);
 		var board = req.params.board;
-		apiClient.newThread(board, {
+		apiClient.newThread({
+			'board': board,
 			'name': 'Anonymous',
 			'email': '',
 			'subject': 'hello',
@@ -28,6 +28,7 @@ module.exports = function threads(app, apiClient){
 			'sticky': 0,
 			'ip': req.connection.remoteAddress,
 			'closed': 0
+		}, function(err){
 		});
 	});
 }

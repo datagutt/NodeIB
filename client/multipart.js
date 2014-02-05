@@ -10,6 +10,10 @@ module.exports = function multipart(req, res, next){
 		req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype){
 			var filePath = path.join('../uploads/', filename || 'temp.tmp');
 
+			if(!filename){
+				return file.emit('end');
+			}
+
 			file.on('limit', function(){
 				var err = new Error('File size too large');
 				err.status = 413;
@@ -22,7 +26,7 @@ module.exports = function multipart(req, res, next){
 					encoding: encoding,
 					name: filename,
 					path: filePath
-				}
+				};
 			});
 
 			file.pipe(fs.createWriteStream(filePath));

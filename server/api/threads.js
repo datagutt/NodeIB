@@ -110,6 +110,7 @@ module.exports = function(db){
 		},
 		newThread: function(params, _callback){
 			var p = {
+				'board': params.board,
 				'parent': 0,
 				'op': 1,
 				'name': params.name,
