@@ -1,4 +1,5 @@
 var express = require('express'),
+    expressValidator = require('express-validator'),
 	winston = require('winston'),
 	fs = require('fs'),
 	mongoose = require('mongoose'),
@@ -14,6 +15,7 @@ function setup(app, models){
 	app.use(express.logger({format: 'dev'}));
 	app.use(express.urlencoded())
 	app.use(express.json());
+	app.use(expressValidator());
 	app.use(express.cookieParser());
 	app.use(express.session({secret: 'secret'}));
 	app.use(app.router);

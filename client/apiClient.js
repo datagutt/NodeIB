@@ -87,7 +87,7 @@ module.exports = {
 		}
 		var data = JSON.stringify(params);
 
-		request.post(apiUrl + route, {body: data}, function(err, response, json){
+		request.post(apiUrl + route, {form: params}, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
 			parseJson(json, _callback, function(json){

@@ -2,7 +2,7 @@ var tripcode = require('tripcode'),
 	uuid = require('node-uuid');
 	tripsalt = nconf.get('api:tripsalt');
 var uploadFile = function(file, _callback){
-	if(file && file.data){
+	if(file && file.data && file.name && file.type.match(/^image\//i)){
 		var buffer = new Buffer(file.data, 'base64');
 
 		/*
@@ -46,7 +46,7 @@ module.exports = function(db){
 	var PostSchema = new Schema({
 		'board': String,
 		'isParent': Boolean,
-		'parent': Schema.ObjectId,
+		'parent': {type: Schema.ObjectId, required: false},
 		'op': {type: Boolean, default: 0},
 		'ip': String,
 		'name': String,
@@ -79,7 +79,9 @@ module.exports = function(db){
 			.limit(perPage)
 			.lean()
 			.exec(function(err, threads){
-				threads[0] = formatPost(threads[0]);
+				if(threads.length > 0){
+					threads[0] = formatPost(threads[0]);
+				}
 				_callback(err, threads);
 			});
 		},
@@ -92,7 +94,9 @@ module.exports = function(db){
 			Post.findOne(find)
 			.lean()
 			.exec(function(err, thread){
-				thread = formatPost(thread);
+				if(thread){
+					thread = formatPost(thread);
+				}
 				_callback(err, thread);
 			});
 		},
@@ -111,8 +115,8 @@ module.exports = function(db){
 		newThread: function(params, _callback){
 			var p = {
 				'board': params.board,
-				'parent': 0,
 				'op': 1,
+				'isParent': false,
 				'name': params.name,
 				'tripcode': '',
 				'email': params.email,

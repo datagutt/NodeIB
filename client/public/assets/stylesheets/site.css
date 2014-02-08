@@ -69,8 +69,11 @@ footer {
 	margin: 0;
 	font-size: 15px;
 }
+.thread-reply {
+	padding-bottom: 5px;
+}
 #first-post .post-body {
-	padding-left: 70px;
+	padding-bottom: 10px;
 }
 .post-body {
 	margin: 0;

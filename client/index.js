@@ -27,7 +27,6 @@ function setup(app, siteName){
 	}));
 	app.use(express.csrf());
 	app.use(function(req, res, next){
-		console.log(req.body._csrf, res.locals.csrftoken);
 		res.locals.csrftoken = req.csrfToken();
 
 		// Disable framing
@@ -57,7 +56,7 @@ function setup(app, siteName){
 	/* Wrap in function because timeago doesn't handle undefined */
 	var timeago = require('timeago');
 	app.locals.timeago = function(time){
-		var ago = timeago(new Date(+time));
+		var ago = timeago(new Date(time));
 		return ago;
 	};
 
