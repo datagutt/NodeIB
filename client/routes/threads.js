@@ -17,10 +17,14 @@ module.exports = function threads(app, apiClient){
 				});
 			}
 		], function(err, board, threads){
-			res.render('threads.html', {
-				'board': board,
-				'threads': threads
-			});
+			if(board){
+				res.render('threads.html', {
+					'board': board,
+					'threads': threads
+				});
+			}else{
+				res.render('404.html');
+			}
 		});
 	});
 	app.post('/:shortname', function(req, res, next){
