@@ -14,6 +14,13 @@ function setup(app, siteName){
 	app.set('view cache', false);
 	app.set('views', __dirname + '/views');
 	swig.setDefaults({cache: false});
+	app.use(require('less-middleware')({
+        src: __dirname + '/less',
+    	dest: __dirname + "/public/assets/stylesheets",
+        prefix: '/assets/stylesheets',
+		yuicompress: app.enabled('minification') ? true : false,
+		force: true
+	}));
 	app.use(express.static(__dirname + '/public'));
 	app.use(express.methodOverride());
 	app.use(express.urlencoded())

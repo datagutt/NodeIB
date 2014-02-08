@@ -1,0 +1,50 @@
+/* Forms */
+#thread-form {
+	margin: .5em 0 .5em;
+	word-wrap: break-word;
+	padding: 0 !important;
+}
+#post-content {
+	margin: 0 0 -3px;
+	margin-bottom: -7px;
+	margin-left: 0;
+
+	vertical-align: baseline;
+	.border-radius(2px);
+	min-width: 75px;
+	height: 100%;
+	width: 286px;
+	
+	overflow-wrap: break-word;
+	overflow-y: hidden;
+	resize: none;
+}
+.upload-container {
+	display: inline-block;
+    overflow: hidden;
+    position: relative;
+	vertical-align: bottom;
+	input[type="file"] {
+	    cursor: inherit;
+		display: inline;
+	    font-size: 999px;
+	    filter: alpha(opacity=0);
+	    min-height: 100%;
+	    min-width: 100%;
+	    opacity: 0;
+	    position: absolute;
+	    right: 0;
+	    text-align: right;
+	    top: 0;
+	}
+	.fake-button {
+		cursor: pointer;
+		outline: none;
+		vertical-align: -1px;
+	}
+}
+#thread-form .pure-button {	
+	display: inline-block;
+	vertical-align: baseline;
+	width: auto;
+}

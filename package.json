@@ -33,6 +33,7 @@
     "node-uuid": "~1.4.1",
     "connect-busboy": "0.0.1",
     "lodash": "~2.4.1",
-    "express-validator": "~1.0.1"
+    "express-validator": "~1.0.1",
+    "less-middleware": "~0.1.15"
   }
 }
