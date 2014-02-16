@@ -10,8 +10,7 @@ module.exports = function multipart(req, res, next){
 
 	if(req.busboy){
 		req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype){
-			var filePath = path.join(tmpDir, filename || 'temp.tmp'),
-				fileData;
+			var filePath = path.join(tmpDir, filename || 'temp.tmp');
 
 			if(!filename){
 				return file.emit('end');
