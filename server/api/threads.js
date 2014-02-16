@@ -1,29 +1,49 @@
 var tripcode = require('tripcode'),
-	uuid = require('node-uuid');
+	uuid = require('node-uuid'),
+	easyimg = require('easyimage'),
+	path = require('path'),
+	async = require('async')
 	tripsalt = nconf.get('api:tripsalt');
+
+const MAX_FILE_SIZE = 2 * 1024; /* 2 MB */
+
 var uploadFile = function(file, _callback){
-	if(file && file.data && file.name && file.type.match(/^image\//i)){
-		var buffer = new Buffer(file.data, 'base64');
+	if(file && file.path && file.name && file.type.match(/^image\//i)){
+		var filename = 'upload-' + uuid.v1() + '.png';
 
-		/*
-		if(buffer.length > parseInt(MAX_FILE_SIZE, 10) * 1024){
+		fs.readFile(file.path, function(err, buffer){
+			var uploadPath = path.join(nconf.get('base_dir'), nconf.get('api:upload_path')),
+				full = path.join(uploadPath, 'full', filename),
+				thumb = path.join(uploadPath, 'thumb', filename);
 
-		}
-		*/
+			if(buffer.length > parseInt(MAX_FILE_SIZE, 10) * 1024){
+				_callback(new Error('File too big'));
+				return;
+			}
 
-		var filename = 'upload-' + uuid.v1() + path.extname(file.name);
-
-		fs.readfile(params.file, function(err, data){
-			var fullname = '../uploads/fullsize/' + filename;
-
-			fs.writeFile(fullname, buffer, function(err){
-				_callback(err, fullname);
-			})
+			async.parallel([function(cb){
+				easyimg.thumbnail({
+					'src': file.path,
+					'dst': thumb,
+					'width': 128,
+					'height': 128,
+					'x': 0,
+					'y': 0
+				}, cb);
+			}, function(cb){
+				easyimg.convert({
+					'src': file.path,
+					'dst': full
+				}, cb);
+			}], function(err){
+				console.log(err);
+				_callback(err, filename);
+			});
 		});
 	}else{
-		_callback(new Error('invalid file'));
+		_callback(new Error('Invalid file'));
 	}
-}
+};
 var formatPost = function(post){
 	var tripindex = post.name.indexOf('#');
 	if(tripindex > -1){
@@ -128,6 +148,11 @@ module.exports = function(db){
 			};
 
 			uploadFile(params.file, function(err, filename){
+				if(err){
+					_callback(err);
+					return;
+				}
+
 				if(filename){
 					p['file'] = filename;
 				}

@@ -21,6 +21,7 @@ function setup(app, siteName){
 		yuicompress: app.enabled('minification') ? true : false,
 		force: true
 	}));
+	app.use(express.static('uploads', nconf.get('api:upload_url')));
 	app.use(express.static(__dirname + '/public'));
 	app.use(express.methodOverride());
 	app.use(express.urlencoded())

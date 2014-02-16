@@ -16,5 +16,5 @@ node_modules
 
 .DS_Store
 config/
-uploads/
+client/public/uploads/
 client/public/assets/stylesheets/site.css

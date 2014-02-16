@@ -1,21 +1,28 @@
 (function(){
 	var nconf = require('nconf'),
+		path = require('path'),
 		async = require('async');
 	
 	global.env = process.env.NODE_ENV || 'production';
 	
 	nconf.argv().env();
 	nconf.file('default', 'config/' + global.env + '.json');
+	nconf.set('base_dir', __dirname);
+	nconf.set('server_dir', nconf.get('base_dir') + 'server');
+	nconf.set('client_dir', nconf.get('base_dir') + 'client');
 	nconf.defaults({
 		'api': {
 			'port': 3000,
-			'tripsalt': '3895ha985hva9v5hav5+jav5'
+			'tripsalt': '3895ha985hva9v5hav5+jav5',
+			'upload_path': path.join(nconf.get('client_dir'), 'public', 'uploads')
 		},
 		'client': {
 			'port': 3100,
-			'siteName': 'NodeIB'
+			'siteName': 'NodeIB',
+			'upload_url':  '/public/uploads'
 		}
 	});
+
 	global.nconf = nconf;
 	
 	var server = require('./server'),

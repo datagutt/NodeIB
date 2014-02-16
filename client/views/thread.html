@@ -13,7 +13,11 @@
 				<span class="post-ago">{{ timeago(thread.time) }}</span>
 			</h3>
 		</header>
-		<div class="post-image">{% if thread.file %}<img src="{{ thread.file }}">{% endif %}</div>
+		<div class="post-image">
+			{% if thread.file %}
+			<a href="/uploads/full/{{ thread.file }}"><img src="/uploads/thumb/{{ thread.file }}"></a>
+			{% endif %}
+		</div>
 		<div class="post-body">{{ thread.comment }}</div>
 	</div>
 	{% for post in thread.replies %}
@@ -29,7 +33,11 @@
 				<span class="post-ago">{{ timeago(post.time) }}</span>
 			</h3>
 		</header>
-		<div class="post-image">{% if post.file %}<img src="{{ post.file }}">{% endif %}</div>
+		<div class="post-image">
+			{% if post.file %}
+			<a href="/uploads/full/{{ post.file }}"><img src="/uploads/thumb/{{ post.file }}"></a>
+			{% endif %}
+		</div>
 		<div class="post-body">{{ post.comment }}</div>
 	</div>
 	{% endfor %}

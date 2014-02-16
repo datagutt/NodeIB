@@ -1,3 +1,5 @@
+var os = require('os'),
+	tmpDir = os.tmpdir();
 module.exports = function multipart(req, res, next){
 	if(!req.files){
 		req.files = {};
@@ -8,7 +10,8 @@ module.exports = function multipart(req, res, next){
 
 	if(req.busboy){
 		req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype){
-			var filePath = path.join('../uploads/', filename || 'temp.tmp');
+			var filePath = path.join(tmpDir, filename || 'temp.tmp'),
+				fileData;
 
 			if(!filename){
 				return file.emit('end');
