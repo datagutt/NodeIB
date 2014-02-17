@@ -32,15 +32,17 @@ function setup(app, siteName){
 			httpOnly: true
 		}
 	}));
-	app.use(express.csrf());
-	app.use(function(req, res, next){
-		res.locals.csrftoken = req.csrfToken();
+	if(nconf.get('client:use_csrf')){
+		app.use(express.csrf());
+		app.use(function(req, res, next){
+			res.locals.csrftoken = req.csrfToken();
 
-		// Disable framing
-		res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+			// Disable framing
+			res.setHeader('X-Frame-Options', 'SAMEORIGIN');
 
-		next();
-	});
+			next();
+		});
+	}
 	app.use(multipart);
 	app.use(express.favicon());
 	app.use(app.router);
