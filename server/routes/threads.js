@@ -62,12 +62,11 @@ module.exports = function threads(app, api){
 		var errors = req.validationErrors(true);
 		if(errors){
 			res.status(500);
-			res.send({
+			return res.send({
 				'error': true, 
 				'message': 'Validation error.', 
 				'errors': errors
 			});
-			return;
 		}
 
 		ThreadApi.newThread(req.body, function(err, thread){

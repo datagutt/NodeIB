@@ -17,8 +17,7 @@ var uploadFile = function(file, _callback){
 				thumb = path.join(uploadPath, 'thumb', filename);
 
 			if(buffer.length > parseInt(MAX_FILE_SIZE, 10) * 1024){
-				_callback(new Error('File too big'));
-				return;
+				return _callback(new Error('File too big'));
 			}
 
 			async.parallel([function(cb){
@@ -36,7 +35,6 @@ var uploadFile = function(file, _callback){
 					'dst': full
 				}, cb);
 			}], function(err){
-				console.log(err);
 				_callback(err, filename);
 			});
 		});
@@ -99,9 +97,6 @@ module.exports = function(db){
 			.limit(perPage)
 			.lean()
 			.exec(function(err, threads){
-				if(threads.length > 0){
-					threads[0] = formatPost(threads[0]);
-				}
 				_callback(err, threads);
 			});
 		},
@@ -149,8 +144,7 @@ module.exports = function(db){
 
 			uploadFile(params.file, function(err, filename){
 				if(err){
-					_callback(err);
-					return;
+					return _callback(err);
 				}
 
 				if(filename){
