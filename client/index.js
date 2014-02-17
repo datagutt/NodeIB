@@ -1,5 +1,4 @@
 var express = require('express'),
-	busboy = require('connect-busboy');
 	multipart = require('./multipart'),
 	swig = require('swig'),
 	winston = require('winston'),
@@ -26,7 +25,6 @@ function setup(app, siteName){
 	app.use(express.methodOverride());
 	app.use(express.urlencoded())
 	app.use(express.json());
-	app.use(busboy());
 	app.use(multipart);
 	app.use(express.cookieParser());
 	app.use(express.session({

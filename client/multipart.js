@@ -1,6 +1,15 @@
-var os = require('os'),
+var BusBoy = require('busboy'),
+	path = require('path'),
+	os = require('os'),
 	tmpDir = os.tmpdir();
 module.exports = function multipart(req, res, next){
+	var hasError = false,
+	    busboy;
+
+    if(req.method && !req.method.match(/post/i)){
+        return next();
+    }
+
 	if(!req.files){
 		req.files = {};
 	}
@@ -8,8 +17,10 @@ module.exports = function multipart(req, res, next){
 		req.body = {};
 	}
 
-	if(req.busboy){
-		req.busboy.on('file', function(fieldname, file, filename, encoding, mimetype){
+    var busboy = new BusBoy({ headers: req.headers });
+
+	if(busboy){
+		busboy.on('file', function(fieldname, file, filename, encoding, mimetype){
 			var filePath = path.join(tmpDir, filename || 'temp.tmp');
 
 			if(!filename){
@@ -17,9 +28,10 @@ module.exports = function multipart(req, res, next){
 			}
 
 			file.on('limit', function(){
-				var err = new Error('File size too large');
-				err.status = 413;
-				next(err);
+				res.send(413, {
+					errorCode: 413,
+					message: 'File size limit reached'
+				});
 			});
 
 			file.on('end', function(){
@@ -33,13 +45,16 @@ module.exports = function multipart(req, res, next){
 
 			file.pipe(fs.createWriteStream(filePath));
 		});
-		req.busboy.on('field', function(fieldname, val) {
+
+		busboy.on('field', function(fieldname, val) {
 			req.body[fieldname] = val;
 		});
-		req.busboy.on('end', function(){
+
+		busboy.on('end', function(){
 			next();
 		});
-		req.pipe(req.busboy);
+
+		req.pipe(busboy);
 	}else{
 		next();
 	}

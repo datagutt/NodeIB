@@ -8,8 +8,8 @@
 	nconf.argv().env();
 	nconf.file('default', 'config/' + global.env + '.json');
 	nconf.set('base_dir', __dirname);
-	nconf.set('server_dir', nconf.get('base_dir') + 'server');
-	nconf.set('client_dir', nconf.get('base_dir') + 'client');
+	nconf.set('server_dir', path.join(nconf.get('base_dir'), path.sep, 'server'));
+	nconf.set('client_dir', path.join(nconf.get('base_dir'), path.sep, 'client'));
 	nconf.defaults({
 		'api': {
 			'port': 3000,
