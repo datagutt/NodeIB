@@ -25,11 +25,12 @@ function setup(app, siteName){
 	app.use(express.methodOverride());
 	app.use(express.urlencoded())
 	app.use(express.json());
-	app.use(multipart);
 	app.use(express.cookieParser());
 	app.use(express.session({
 		secret: 'secret',
-		cookie: {httpOnly: true}
+		cookie: {
+			httpOnly: true
+		}
 	}));
 	app.use(express.csrf());
 	app.use(function(req, res, next){
@@ -40,6 +41,7 @@ function setup(app, siteName){
 
 		next();
 	});
+	app.use(multipart);
 	app.use(express.favicon());
 	app.use(app.router);
 	app.use(expressWinston.errorLogger({

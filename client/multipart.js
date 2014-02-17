@@ -1,14 +1,14 @@
 var BusBoy = require('busboy'),
 	path = require('path'),
-	os = require('os'),
-	tmpDir = os.tmpdir();
+	fs = require('fs'),
+	os = require('os');
 module.exports = function multipart(req, res, next){
-	var hasError = false,
-	    busboy;
+	var busboy,
+		tmpDir = os.tmpdir();
 
-    if(req.method && !req.method.match(/post/i)){
-        return next();
-    }
+	if(req.method && !req.method.match(/post/i)){
+		return next();
+	}
 
 	if(!req.files){
 		req.files = {};
@@ -17,45 +17,45 @@ module.exports = function multipart(req, res, next){
 		req.body = {};
 	}
 
-    var busboy = new BusBoy({ headers: req.headers });
+	var busboy = new BusBoy({headers: req.headers});
 
-	if(busboy){
-		busboy.on('file', function(fieldname, file, filename, encoding, mimetype){
-			var filePath = path.join(tmpDir, filename || 'temp.tmp');
+	busboy.on('file', function(fieldname, file, filename, encoding, mimetype){
+		var filePath = path.join(tmpDir, filename || 'temp.tmp');
 
-			if(!filename){
-				return file.emit('end');
-			}
+		if(!filename){
+			return file.emit('end');
+		}
 
-			file.on('limit', function(){
-				res.send(413, {
-					errorCode: 413,
-					message: 'File size limit reached'
-				});
+		file.on('end', function(){
+			req.files[fieldname] = {
+				type: mimetype,
+				encoding: encoding,
+				name: filename,
+				path: filePath
+			};
+		});
+
+		busboy.on('error', function(error){
+			winston.error(error);
+		});
+
+		busboy.on('limit', function(){
+			res.send(413, {
+				errorCode: 413,
+				message: 'File size limit reached'
 			});
-
-			file.on('end', function(){
-				req.files[fieldname] = {
-					type: mimetype,
-					encoding: encoding,
-					name: filename,
-					path: filePath
-				};
-			});
-
-			file.pipe(fs.createWriteStream(filePath));
 		});
 
-		busboy.on('field', function(fieldname, val) {
-			req.body[fieldname] = val;
-		});
+		file.pipe(fs.createWriteStream(filePath)); 
+	});
 
-		busboy.on('end', function(){
-			next();
-		});
+	busboy.on('field', function(fieldname, val) {
+		req.body[fieldname] = val;
+	});
 
-		req.pipe(busboy);
-	}else{
+	busboy.on('end', function(){
 		next();
-	}
+	});
+
+	req.pipe(busboy);
 };
