@@ -62,7 +62,7 @@ module.exports = function threads(app, api){
 		var errors = req.validationErrors(true);
 		if(errors){
 			res.status(500);
-			return res.send({
+			res.send({
 				'error': true, 
 				'message': 'Validation error.', 
 				'errors': errors
@@ -74,11 +74,11 @@ module.exports = function threads(app, api){
 				res.status(500);
 				res.send({
 					'error': true,
-					'message' : err.message
+					'message': err.message
 				});
 			}else{
 				res.send(thread || []);
 			}
 		});
 	})
-}
+};

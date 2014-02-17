@@ -2,21 +2,22 @@ var tripcode = require('tripcode'),
 	uuid = require('node-uuid'),
 	easyimg = require('easyimage'),
 	path = require('path'),
+	fs = require('fs'),
 	async = require('async')
 	tripsalt = nconf.get('api:tripsalt');
 
 const MAX_FILE_SIZE = 2 * 1024; /* 2 MB */
 
 var uploadFile = function(file, _callback){
-	if(file && file.path && file.name && file.type.match(/^image\//i)){
+	if(file && file.path && file.name){
 		var filename = 'upload-' + uuid.v1() + '.png';
 
 		fs.readFile(file.path, function(err, buffer){
-			var uploadPath = path.join(nconf.get('base_dir'), nconf.get('api:upload_path')),
+			var uploadPath = nconf.get('api:upload_path'),
 				full = path.join(uploadPath, 'full', filename),
 				thumb = path.join(uploadPath, 'thumb', filename);
 
-			if(file.type.match(/^image\//i)){
+			if(!file.type.match(/^image\//i)){
 				return _callback(new Error('Invalid file format'));
 			}
 			if(buffer.length > parseInt(MAX_FILE_SIZE, 10) * 1024){

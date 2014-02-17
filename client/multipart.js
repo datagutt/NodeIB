@@ -8,11 +8,7 @@ module.exports = function multipart(req, res, next){
 	var busboy,
 		tmpDir = os.tmpdir();
 
-	if(req.busboy
-		|| req.method === 'GET'
-		|| req.method === 'HEAD'
-		|| !hasBody(req)
-		|| !RE_MIME.test(mime(req))){
+	if(req.method && !req.method.match(/post/i)){
  		return next();
   	}
 
@@ -29,8 +25,7 @@ module.exports = function multipart(req, res, next){
 		var filePath = path.join(tmpDir, filename || 'temp.tmp');
 
 		if(!filename){
-			file.emit('end');
-			return busboy.emit('end');
+			return file.emit('end');
 		}
 
 		file.on('end', function(){
@@ -43,7 +38,8 @@ module.exports = function multipart(req, res, next){
 		});
 
 		busboy.on('limit', function(){
-			res.send(413, {
+			res.status(413);
+			res.send({
 				errorCode: 413,
 				message: 'File size limit reached'
 			});
@@ -53,10 +49,11 @@ module.exports = function multipart(req, res, next){
 	});
 
 	busboy.on('field', function(fieldname, val) {
+		console.log(fieldname, val);
 		req.body[fieldname] = val;
 	});
 
-	busboy.on('end', function(){
+	busboy.on('finish', function(){
 		next();
 	});
 

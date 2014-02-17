@@ -55,11 +55,11 @@ module.exports = function threads(app, apiClient){
 			}
 		], function(err, thread){
 			if(err){
-				res.json(JSON.parse(err.message));
+				return res.json(JSON.parse(err.message));
 			}
 
 			if(thread){
-				res.redirect('/' + shortName);
+				res.send(thread);
 			}
 		});
 	});

@@ -32,9 +32,9 @@ module.exports = {
 		}, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-            parseJson(json, _callback, function(json){
-                _callback(null, json);
-            });
+			parseJson(json, _callback, function(json){
+				_callback(null, json);
+			});
 		});
 	},
 	getBoard: function(shortname, _callback){
@@ -50,9 +50,9 @@ module.exports = {
 		}, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-            parseJson(json, _callback, function(json){
-                _callback(null, json);
-            });
+			parseJson(json, _callback, function(json){
+				_callback(null, json);
+			});
 		});
 	},
 	getIndexThreads: function(board, page, _callback){
@@ -74,9 +74,9 @@ module.exports = {
 		}, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-            parseJson(json, _callback, function(json){
-                _callback(null, json);
-            });
+			parseJson(json, _callback, function(json){
+				_callback(null, json);
+			});
 		});
 	},
 	newThread: function(params, _callback){

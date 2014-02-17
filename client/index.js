@@ -72,7 +72,7 @@ function setup(app, siteName){
 
 	setupRoutes();
 	
-	app.get('*', function(req, res){
+	app.get('*', function(req, res, next){
 		res.status(404);
 		res.render('404.html');
 	});
