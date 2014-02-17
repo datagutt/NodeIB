@@ -2,13 +2,19 @@ var BusBoy = require('busboy'),
 	path = require('path'),
 	fs = require('fs'),
 	os = require('os');
+
+var RE_MIME = /^(?:multipart\/.+)|(?:application\/x-www-form-urlencoded)$/i;
 module.exports = function multipart(req, res, next){
 	var busboy,
 		tmpDir = os.tmpdir();
 
-	if(req.method && !req.method.match(/post/i)){
-		return next();
-	}
+	if(req.busboy
+		|| req.method === 'GET'
+		|| req.method === 'HEAD'
+		|| !hasBody(req)
+		|| !RE_MIME.test(mime(req))){
+ 		return next();
+  	}
 
 	if(!req.files){
 		req.files = {};
@@ -23,7 +29,8 @@ module.exports = function multipart(req, res, next){
 		var filePath = path.join(tmpDir, filename || 'temp.tmp');
 
 		if(!filename){
-			return file.emit('end');
+			file.emit('end');
+			return busboy.emit('end');
 		}
 
 		file.on('end', function(){
@@ -33,10 +40,6 @@ module.exports = function multipart(req, res, next){
 				name: filename,
 				path: filePath
 			};
-		});
-
-		busboy.on('error', function(error){
-			winston.error(error);
 		});
 
 		busboy.on('limit', function(){
@@ -58,4 +61,16 @@ module.exports = function multipart(req, res, next){
 	});
 
 	req.pipe(busboy);
+};
+
+// utility functions copied from Connect
+function hasBody(req){
+	var encoding = 'transfer-encoding' in req.headers,
+		length = 'content-length' in req.headers
+			&& req.headers['content-length'] !== '0';
+	return encoding || length;
+};
+function mime(req){
+	var str = req.headers['content-type'] || '';
+	return str.split(';')[0];
 };

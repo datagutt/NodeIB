@@ -16,6 +16,9 @@ var uploadFile = function(file, _callback){
 				full = path.join(uploadPath, 'full', filename),
 				thumb = path.join(uploadPath, 'thumb', filename);
 
+			if(file.type.match(/^image\//i)){
+				return _callback(new Error('Invalid file format'));
+			}
 			if(buffer.length > parseInt(MAX_FILE_SIZE, 10) * 1024){
 				return _callback(new Error('File too big'));
 			}
@@ -39,7 +42,7 @@ var uploadFile = function(file, _callback){
 			});
 		});
 	}else{
-		_callback(new Error('Invalid file'));
+		_callback(null);
 	}
 };
 var formatPost = function(post){

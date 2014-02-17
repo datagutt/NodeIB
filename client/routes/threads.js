@@ -55,7 +55,6 @@ module.exports = function threads(app, apiClient){
 			}
 		], function(err, thread){
 			if(err){
-				console.log(err);
 				res.json(JSON.parse(err.message));
 			}
 
