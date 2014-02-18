@@ -18,6 +18,14 @@ module.exports = function threads(app, api){
 		}
 	};
 	
+	app.get('/totalThreads/:board', function(req, res){
+		var board = req.params.board;
+			
+		ThreadApi.getTotalThreads(board, function(total){
+			res.send(total);
+		});
+	});
+	
 	// The "?" after each parameter makes it optional
 	app.get('/threads/:board?/:page?', function(req, res){
 		var board = req.params.board,
@@ -39,6 +47,7 @@ module.exports = function threads(app, api){
 			}
 		});
 	});
+
 	app.post('/newThread', function(req, res){
 
 		req.checkBody('name', 'Name can not be empty.').notEmpty();

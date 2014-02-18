@@ -79,6 +79,26 @@ module.exports = {
 			});
 		});
 	},
+	getTotalThreads: function(board, _callback){
+		var route = '/totalThreads/';
+
+		if(board){
+			route += board;
+		}else{
+			route += 'all';
+		}
+
+		request({
+			method: 'get',
+			uri: apiUrl + route
+		}, function(err, response, json){
+			if(!checkResponse(err, response, _callback)) return;
+
+			parseJson(json, _callback, function(json){
+				_callback(null, json);
+			});
+		});
+	},
 	newThread: function(params, _callback){
 		var route = '/newThread/';
 

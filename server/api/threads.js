@@ -8,7 +8,7 @@ var tripcode = require('tripcode'),
 
 const MAX_FILE_SIZE = 2 * 1024; /* 2 MB */
 
-var uploadFile = function(file, _callback){
+var uploadFile = function uploadFile(file, _callback){
 	if(file && file.path && file.name){
 		var filename = 'upload-' + uuid.v1() + '.png';
 
@@ -46,7 +46,7 @@ var uploadFile = function(file, _callback){
 		_callback(null);
 	}
 };
-var formatPost = function(post){
+var formatPost = function formatPost(post){
 	var tripindex = post.name.indexOf('#');
 	if(tripindex > -1){
 		var trip = post.name.substr(tripindex + 1),
@@ -83,11 +83,30 @@ module.exports = function(db){
 	PostSchema.set('redisCache', true);
 	Post = db.model('Post', PostSchema);
 
+	var getTotalThreads = function getTotalThreads(board, _callback){
+		var find = {};
+
+		if(board && board !== 'all'){
+			find['board'] = board;
+		}
+
+		find['isParent'] = false;
+
+		Post.count(find)
+		.lean()
+		.exec(function(err, total){
+			if(!total){
+				total = 0;
+			}
+			_callback({'total': total});
+		});
+	};
+
 	return {
 		getIndexThreads: function(board, page, _callback){
-			var page = page ? parseInt(page, 10) : 0,
+			var page = page ? parseInt(page, 10) : 1,
 				perPage = 10,
-				offset = page * perPage,
+				offset = (page - 1) * perPage,
 				find = {};
 			
 			if(board && board !== 'all'){
@@ -104,6 +123,7 @@ module.exports = function(db){
 				_callback(err, threads);
 			});
 		},
+		getTotalThreads: getTotalThreads,
 		getThread: function(id, _callback){
 			var find = {};
 			

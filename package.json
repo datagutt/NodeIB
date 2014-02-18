@@ -35,6 +35,7 @@
     "express-validator": "~1.0.1",
     "less-middleware": "~0.1.15",
     "easyimage": "~0.1.6",
-    "busboy": "~0.1.0"
+    "busboy": "~0.1.0",
+    "pagination": "~0.3.8"
   }
 }

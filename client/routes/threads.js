@@ -1,8 +1,11 @@
-var async = require('async');
+var async = require('async'),
+	pagination = require('pagination');
 module.exports = function threads(app, apiClient){
 	app.get('/:shortname', function(req, res){
 		var shortName = req.params.shortname,
-			page = req.query.page;
+			page = req.query.page ? parseInt(req.query.page, 10) : 1
+			perPage = 10,
+			offset = (page - 1) * perPage;
 		
 		async.waterfall([
 			function(_callback){
@@ -15,12 +18,25 @@ module.exports = function threads(app, apiClient){
 				apiClient.getIndexThreads(boardName, page, function(err, threads){
 					_callback(err, board, threads);
 				});
+			},
+			function(board, threads, _callback){
+				var boardName = board.name.toLowerCase();
+				apiClient.getTotalThreads(boardName, function(err, json){
+					_callback(err, board, threads, json.total);
+				});
 			}
-		], function(err, board, threads){
+		], function(err, board, threads, total){
 			if(board){
+				var paginator = new pagination.ItemPaginator({
+					'prelink': '/' + shortName + '/',
+					'current': page,
+					'rowsPerPage': perPage,
+					'totalResult': total
+				});
 				res.render('threads.html', {
 					'board': board,
-					'threads': threads
+					'threads': threads,
+					'pagination': paginator.render()
 				});
 			}else{
 				res.render('404.html');
