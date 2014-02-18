@@ -25,7 +25,7 @@ module.exports = function multipart(req, res, next){
 		var filePath = path.join(tmpDir, filename || 'temp.tmp');
 
 		if(!filename){
-			return file.emit('end');
+			return busboy.emit('finish');
 		}
 
 		file.on('end', function(){
@@ -49,7 +49,6 @@ module.exports = function multipart(req, res, next){
 	});
 
 	busboy.on('field', function(fieldname, val) {
-		console.log(fieldname, val);
 		req.body[fieldname] = val;
 	});
 

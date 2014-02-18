@@ -59,7 +59,7 @@ module.exports = function threads(app, apiClient){
 			}
 
 			if(thread){
-				res.send(thread);
+				res.redirect('/' + shortName);
 			}
 		});
 	});
