@@ -1,5 +1,5 @@
 var async = require('async'),
-	pagination = require('pagination');
+	pagination = require('pure-css-pagination');
 module.exports = function threads(app, apiClient){
 	app.get('/:shortname', function(req, res){
 		var shortName = req.params.shortname,
@@ -27,7 +27,7 @@ module.exports = function threads(app, apiClient){
 			}
 		], function(err, board, threads, total){
 			if(board){
-				var paginator = new pagination.ItemPaginator({
+				var paginator = new pagination.SearchPaginator({
 					'prelink': '/' + shortName + '/',
 					'current': page,
 					'rowsPerPage': perPage,

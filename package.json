@@ -18,6 +18,7 @@
   "bugs": {
     "url": "https://github.com/datagutt/NodeIB/issues"
   },
+  "private": true,
   "dependencies": {
     "async": "~0.2.10",
     "express": "~3.4.8",
@@ -36,6 +37,6 @@
     "less-middleware": "~0.1.15",
     "easyimage": "~0.1.6",
     "busboy": "~0.1.0",
-    "pagination": "~0.3.8"
+    "pure-css-pagination": "~0.4.0"
   }
 }
