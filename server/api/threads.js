@@ -3,7 +3,7 @@ var tripcode = require('tripcode'),
 	easyimg = require('easyimage'),
 	path = require('path'),
 	fs = require('fs'),
-	async = require('async')
+	async = require('async'),
 	tripsalt = nconf.get('api:tripsalt');
 
 const MAX_FILE_SIZE = 2 * 1024; /* 2 MB */
@@ -115,7 +115,7 @@ module.exports = function(db){
 			find['isParent'] = false;
 			
 			Post.find(find)
-			.sort({lastUpdate: -1})
+			.sort({time: -1})
 			.skip(offset)
 			.limit(perPage)
 			.lean()
@@ -146,6 +146,7 @@ module.exports = function(db){
 			find['isParent'] = true;
 			
 			Post.find(find)
+			.sort({time: -1})
 			.lean()
 			.exec(function(err, replies){
 				_callback(err, replies);
