@@ -81,6 +81,7 @@ module.exports = function(db){
 		'time': {type: Date, default: Date.now},
 		'closed': 0
 	}), Post;
+	PostSchema.plugin(timestamps);
 	PostSchema.set('redisCache', true);
 	Post = db.model('Post', PostSchema);
 

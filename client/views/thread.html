@@ -10,7 +10,7 @@
 					{% endif %}
 				</span>
 				wrote
-				<span class="post-ago">{{ timeago(thread.time) }}</span>
+				<span class="post-ago">{{ timeago(thread.createdAt) }}</span>
 			</h3>
 		</header>
 		<div class="post-image">
@@ -30,7 +30,7 @@
 					{% endif %}
 				</span>
 				wrote
-				<span class="post-ago">{{ timeago(post.time) }}</span>
+				<span class="post-ago">{{ timeago(post.createdAt) }}</span>
 			</h3>
 		</header>
 		<div class="post-image">
