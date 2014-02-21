@@ -18,7 +18,7 @@ module.exports = function threads(app, api){
 		}
 	};
 	
-	app.get('/totalThreads/:board', function(req, res){
+	app.get('/totalThreads/:board?', function(req, res){
 		var board = req.params.board;
 			
 		ThreadApi.getTotalThreads(board, function(total){
