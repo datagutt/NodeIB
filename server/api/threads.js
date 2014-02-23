@@ -85,27 +85,8 @@ module.exports = function(db){
 	PostSchema.set('redisCache', true);
 	Post = db.model('Post', PostSchema);
 
-	var getTotalThreads = function getTotalThreads(board, _callback){
-		var find = {};
-
-		if(board && board !== 'all'){
-			find['board'] = board;
-		}
-
-		find['isParent'] = false;
-
-		Post.count(find)
-		.lean()
-		.exec(function(err, total){
-			if(!total){
-				total = 0;
-			}
-			_callback({'total': total});
-		});
-	};
-
 	return {
-		getIndexThreads: function(board, page, _callback){
+		getIndexThreads: function getIndexThreads(board, page, _callback){
 			var page = page ? parseInt(page, 10) : 1,
 				perPage = 10,
 				offset = (page - 1) * perPage,
@@ -125,8 +106,25 @@ module.exports = function(db){
 				_callback(err, threads);
 			});
 		},
-		getTotalThreads: getTotalThreads,
-		getThread: function(id, _callback){
+		getTotalThreads: function getTotalThreads(board, _callback){
+			var find = {};
+
+			if(board && board !== 'all'){
+				find['board'] = board;
+			}
+
+			find['isParent'] = false;
+
+			Post.count(find)
+			.lean()
+			.exec(function(err, total){
+				if(!total){
+					total = 0;
+				}
+				_callback({'total': total});
+			});
+		},
+		getThread: function getThread(id, _callback){
 			var find = {};
 			
 			find['_id'] = id;
@@ -141,7 +139,7 @@ module.exports = function(db){
 				_callback(err, thread);
 			});
 		},
-		getThreadReplies: function(id, _callback){
+		getThreadReplies: function getThreadReplies(id, _callback){
 			var find = {};
 			
 			find['parent'] = id;
@@ -154,7 +152,7 @@ module.exports = function(db){
 				_callback(err, replies);
 			});
 		},
-		newThread: function(params, _callback){
+		newThread: function newThread(params, _callback){
 			var p = {
 				'board': params.board,
 				'op': 1,
