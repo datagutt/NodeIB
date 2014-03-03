@@ -38,6 +38,10 @@
     "easyimage": "~0.1.6",
     "busboy": "~0.1.0",
     "pure-css-pagination": "~0.4.0",
-    "mongoose-timestamp": "~0.2.0"
+    "mongoose-timestamp": "~0.2.0",
+    "body-parser": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "express-session": "~1.0.2",
+    "static-favicon": "~1.0.0"
   }
 }

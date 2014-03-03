@@ -1,5 +1,8 @@
 var express = require('express'),
-    expressValidator = require('express-validator'),
+  bodyParser = require('body-parser'),
+  cookieParser = require('cookie-parser'),
+  expressSession = require('express-session'),
+  expressValidator = require('express-validator'),
 	winston = require('winston'),
 	fs = require('fs'),
 	mongoose = require('mongoose'),
@@ -12,20 +15,17 @@ function setup(app, models){
 
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'swig');
-	app.use(express.logger({format: 'dev'}));
-	app.use(express.urlencoded())
-	app.use(express.json());
+	app.use(bodyParser());
 	app.use(expressValidator());
-	app.use(express.cookieParser());
-	app.use(express.session({secret: 'secret'}));
-	app.use(app.router);
+	app.use(cookieParser());
+	app.use(expressSession({secret: 'secret'}));
 	app.use(function(req, res, next){
 		res.type('json');
 		next();
 	});
-	
+
 	setupRoutes(models);
-	
+
 	app.get('*', function(req, res){
 		res.send({}, 404);
 	});
@@ -39,10 +39,10 @@ function init(port, host){
 	if(!app){
 		app = express();
 	}
-	
+
 	api(mongoose, function(err, models){
 		setup(app, models);
-		
+
 		app.listen(port, function(){
 			winston.info('API listening at 0.0.0.0:' + port);
 		});

@@ -1,4 +1,8 @@
 var express = require('express'),
+	bodyParser = require('body-parser'),
+	cookieParser = require('cookie-parser'),
+	expressSession = require('express-session'),
+	staticFavicon = require('static-favicon'),
 	multipart = require('./multipart'),
 	swig = require('swig'),
 	winston = require('winston'),
@@ -22,11 +26,9 @@ function setup(app, siteName){
 	}));
 	app.use(express.static('uploads', nconf.get('api:upload_url')));
 	app.use(express.static(__dirname + '/public'));
-	app.use(express.methodOverride());
-	app.use(express.urlencoded())
-	app.use(express.json());
-	app.use(express.cookieParser());
-	app.use(express.session({
+	app.use(bodyParser());
+	app.use(cookieParser());
+	app.use(expressSession({
 		secret: 'secret',
 		cookie: {
 			httpOnly: true
@@ -44,8 +46,7 @@ function setup(app, siteName){
 		});
 	}
 	app.use(multipart);
-	app.use(express.favicon());
-	app.use(app.router);
+	//app.use(staticFavicon());
 	app.use(expressWinston.errorLogger({
 		transports: [
 			new winston.transports.Console({
@@ -56,7 +57,7 @@ function setup(app, siteName){
 		meta: true,
 		msg: "HTTP {{req.method}} {{req.url}}"
 	}));
-	
+
 	// Config
 	app.locals.siteName = siteName;
 	// Helpers
@@ -71,7 +72,7 @@ function setup(app, siteName){
 	};
 
 	setupRoutes();
-	
+
 	app.get('*', function(req, res, next){
 		res.status(404);
 		res.render('404.html');
@@ -86,9 +87,9 @@ function init(port, siteName){
 	if(!app){
 		app = express();
 	}
-	
+
 	setup(app, siteName);
-		
+
 	app.listen(port, function(){
 		winston.info('Client listening at 0.0.0.0:' + port);
 	});
