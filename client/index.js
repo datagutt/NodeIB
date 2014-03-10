@@ -3,7 +3,8 @@ var express = require('express'),
 	cookieParser = require('cookie-parser'),
 	expressSession = require('express-session'),
 	staticFavicon = require('static-favicon'),
-	multipart = require('./multipart'),
+	expressCsrf = require('csurf'),
+	multer = require('multer'),
 	swig = require('swig'),
 	winston = require('winston'),
 	expressWinston = require('express-winston'),
@@ -18,11 +19,11 @@ function setup(app, siteName){
 	app.set('views', __dirname + '/views');
 	swig.setDefaults({cache: false});
 	app.use(require('less-middleware')({
-        src: __dirname + '/less',
-    	dest: __dirname + "/public/assets/stylesheets",
-        prefix: '/assets/stylesheets',
-		yuicompress: app.enabled('minification') ? true : false,
-		force: true
+      src: __dirname + '/less',
+			dest: __dirname + "/public/assets/stylesheets",
+      prefix: '/assets/stylesheets',
+			yuicompress: app.enabled('minification') ? true : false,
+			force: true
 	}));
 	app.use(express.static('uploads', nconf.get('api:upload_url')));
 	app.use(express.static(__dirname + '/public'));
@@ -35,7 +36,7 @@ function setup(app, siteName){
 		}
 	}));
 	if(nconf.get('client:use_csrf')){
-		app.use(express.csrf());
+		app.use(expressCsrf());
 		app.use(function(req, res, next){
 			res.locals.csrftoken = req.csrfToken();
 
@@ -45,7 +46,7 @@ function setup(app, siteName){
 			next();
 		});
 	}
-	app.use(multipart);
+	app.use(multer());
 	//app.use(staticFavicon());
 	app.use(expressWinston.errorLogger({
 		transports: [

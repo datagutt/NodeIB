@@ -17,8 +17,8 @@ var uploadFile = function uploadFile(file, _callback){
 			var uploadPath = nconf.get('api:upload_path'),
 				full = path.join(uploadPath, 'full', filename),
 				thumb = path.join(uploadPath, 'thumb', filename);
-
-			if(!file.type.match(/^image\//i)){
+console.log(file);
+			if(!file.mimetype.match(/^image\//i)){
 				return _callback(new Error('Invalid file format'));
 			}
 			if(buffer.length > parseInt(MAX_FILE_SIZE, 10) * 1024){
@@ -91,12 +91,12 @@ module.exports = function(db){
 				perPage = 10,
 				offset = (page - 1) * perPage,
 				find = {};
-			
+
 			if(board && board !== 'all'){
 				find['board'] = board;
 			}
 			find['isParent'] = false;
-			
+
 			Post.find(find)
 			.sort({updatedAt: -1})
 			.skip(offset)
@@ -126,7 +126,7 @@ module.exports = function(db){
 		},
 		getThread: function getThread(id, _callback){
 			var find = {};
-			
+
 			find['_id'] = id;
 			find['isParent'] = false;
 
@@ -141,10 +141,10 @@ module.exports = function(db){
 		},
 		getThreadReplies: function getThreadReplies(id, _callback){
 			var find = {};
-			
+
 			find['parent'] = id;
 			find['isParent'] = true;
-			
+
 			Post.find(find)
 			.sort({updatedAt: -1})
 			.lean()

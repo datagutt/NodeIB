@@ -21,7 +21,7 @@
   "private": true,
   "dependencies": {
     "async": "~0.2.10",
-    "express": "~3.4.8",
+    "express": "~4.0.0-rc2",
     "nconf": "~0.6.9",
     "express-resource": "~1.0.0",
     "swig": "~1.2.2",
@@ -36,12 +36,13 @@
     "express-validator": "~1.0.1",
     "less-middleware": "~0.1.15",
     "easyimage": "~0.1.6",
-    "busboy": "~0.1.0",
     "pure-css-pagination": "~0.4.0",
     "mongoose-timestamp": "~0.2.0",
     "body-parser": "~1.0.0",
     "cookie-parser": "~1.0.1",
     "express-session": "~1.0.2",
-    "static-favicon": "~1.0.0"
+    "static-favicon": "~1.0.0",
+    "multer": "0.0.5",
+    "csurf": "~1.0.0"
   }
 }
