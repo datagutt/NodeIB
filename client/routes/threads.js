@@ -1,7 +1,8 @@
 var async = require('async'),
 	pagination = require('pure-css-pagination');
 module.exports = function threads(app, apiClient){
-	app.get('/:shortname', function(req, res){
+	app.route('/:shortname')
+	.get(function(req, res){
 		var shortName = req.params.shortname,
 			page = req.query.page ? parseInt(req.query.page, 10) : 1
 			perPage = 10,
@@ -42,6 +43,42 @@ module.exports = function threads(app, apiClient){
 				res.render('404.html');
 			}
 		});
+	})
+	.post(function(req, res, next){
+		var shortName = req.params.shortname;
+
+		async.waterfall([
+			function(_callback){
+				apiClient.getBoard(shortName, function(err, board){
+					var boardName;
+					if(board && board.name){
+						boardName = board.name.toLowerCase();
+					}
+					_callback(err, boardName);
+				});
+			},
+			function(boardName, _callback){
+				apiClient.newThread({
+					'board': boardName,
+					'name': req.body.name,
+					'email': req.body.email,
+					'subject': req.body.subject,
+					'comment': req.body.comment,
+					'file': req.files.image,
+					'sticky': 0,
+					'ip': req.connection.remoteAddress,
+					'closed': 0
+				}, _callback);
+			}
+		], function(err, thread){
+			if(err){
+				return res.json(JSON.parse(err.message));
+			}
+
+			if(thread){
+				res.redirect('/' + shortName);
+			}
+		});
 	});
 	app.get('/:shortname/thread/:thread', function(req, res){
 		var shortName = req.params.shortname,
@@ -77,42 +114,6 @@ module.exports = function threads(app, apiClient){
 				});
 			}else{
 				res.render('404.html');
-			}
-		});
-	});
-	app.post('/:shortname', function(req, res, next){
-		var shortName = req.params.shortname;
-
-		async.waterfall([
-			function(_callback){
-				apiClient.getBoard(shortName, function(err, board){
-					var boardName;
-					if(board && board.name){
-						boardName = board.name.toLowerCase();
-					}
-					_callback(err, boardName);
-				});
-			},
-			function(boardName, _callback){
-				apiClient.newThread({
-					'board': boardName,
-					'name': req.body.name,
-					'email': req.body.email,
-					'subject': req.body.subject,
-					'comment': req.body.comment,
-					'file': req.files.image,
-					'sticky': 0,
-					'ip': req.connection.remoteAddress,
-					'closed': 0
-				}, _callback);
-			}
-		], function(err, thread){
-			if(err){
-				return res.json(JSON.parse(err.message));
-			}
-
-			if(thread){
-				res.redirect('/' + shortName);
 			}
 		});
 	});

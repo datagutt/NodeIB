@@ -22,7 +22,7 @@
   "private": true,
   "dependencies": {
     "async": "~0.2.10",
-    "express": "~4.0.0-rc2",
+    "express": "~4.0.0-rc3",
     "nconf": "~0.6.9",
     "express-resource": "~1.0.0",
     "swig": "~1.2.2",
