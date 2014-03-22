@@ -1,20 +1,23 @@
 /* Forms */
-#thread-form {
+#thread-form,
+.reply-form {
 	margin: .5em 0 .5em;
 	word-wrap: break-word;
 	padding: 0 !important;
 }
-#post-content {
+.reply-link {
+}
+.post-content {
 	margin: 0 0 -3px;
 	margin-bottom: -7px;
 	margin-left: 0;
 
-	vertical-align: baseline;
+	//vertical-align: baseline;
 	.border-radius(2px);
 	min-width: 75px;
 	height: 100%;
 	width: 286px;
-	
+
 	overflow-wrap: break-word;
 	overflow-y: hidden;
 	resize: none;
@@ -43,7 +46,8 @@
 		vertical-align: -1px;
 	}
 }
-#thread-form .pure-button {	
+#thread-form .pure-button,
+.reply-form .pure-button {
 	display: inline-block;
 	vertical-align: baseline;
 	width: auto;

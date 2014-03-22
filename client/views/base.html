@@ -12,6 +12,12 @@
 	</title>
 	<meta charset="utf8" /><link href="http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic" rel="stylesheet" type="text/css">
 	<link href="/assets/stylesheets/pure-min.css" rel="stylesheet" />
+	<!--[if lte IE 8]>
+		<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0-rc-1/grids-responsive-old-ie-min.css">
+	<![endif]-->
+	<!--[if gt IE 8]><!-->
+		<link rel="stylesheet" href="/assets/stylesheets/grids-responsive-min.css">
+	<!--<![endif]-->
 	<link href="/assets/stylesheets/site.css" rel="stylesheet" />
 {% for stylesheet in stylesheets %}
 	<link href="/assets/stylesheets/{{stylesheet}}" rel="stylesheet" />
@@ -34,14 +40,14 @@
 			</ul>
 		</div>
 	</header>
-	<div class="pure-g-r">
+	<div class="pure-g">
 		<main>
 			<div id="content">
 {% block content %}{% endblock %}
 			</div>
 		</main>
 	</div>
-	<footer id="footer" class="pure-g-r">
+	<footer id="footer" class="pure-g">
 		<div class="pure-u-2-5">
 			<p>{{ siteName }} &copy; {{ now()|date('Y') }}</p>
 		</div>

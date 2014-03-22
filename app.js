@@ -2,9 +2,9 @@
 	var nconf = require('nconf'),
 		path = require('path'),
 		async = require('async');
-	
+
 	global.env = process.env.NODE_ENV || 'production';
-	
+
 	nconf.argv().env();
 	nconf.file('default', 'config/' + global.env + '.json');
 	nconf.set('base_dir', __dirname);
@@ -24,7 +24,7 @@
 	});
 
 	global.nconf = nconf;
-	
+
 	var server = require('./server'),
 		client = require('./client');
 	server(nconf.get('api:port'));

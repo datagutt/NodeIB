@@ -44,6 +44,7 @@
     "express-session": "~1.0.2",
     "static-favicon": "~1.0.0",
     "multer": "0.0.5",
-    "csurf": "~1.0.0"
+    "csurf": "~1.0.0",
+    "slug": "~0.4.2"
   }
 }

@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="pure-u-1">
-	<form id="thread-form" method="post" enctype="multipart/form-data"  action="/{{ board.shortname}}" class="pure-form pure-form-stacked">
+	<form id="thread-form" method="post" enctype="multipart/form-data"  action="/{{ board.shortname}}" class="pure-form pure-form-stacked pure-g">
 		<fieldset>
 			<input type="hidden" name="_csrf" value="{{csrftoken}}">
 
-			<label for="name">Name</label>
-			<input name="name" type="text" size="25" maxlength="35" autocomplete="off" placeholder="Name">
+			<label for="name" class="pure-u-1-5">Name</label>
+			<input name="name" type="text" class="pure-input-2-3" autocomplete="off" placeholder="Name" required="required">
 
-			<label for="email">Email</label>
-			<input name="email" type="email" placeholder="Email">
+			<label for="email" class="pure-u-1-5">Email</label>
+			<input name="email" type="email" class="pure-input-2-3" placeholder="Email">
 
-			<label for="subject">Subject</label>
-			<input name="subject" type="text" placeholder="Subject">
-			
-			<label for="thread-content">Content</label>
-			<textarea id="thread-content" name="comment" type="text" rows="5" cols="35" placeholder="Content"></textarea>
-			
+			<label for="subject" class="pure-u-1-5">Subject</label>
+			<input name="subject" type="text" class="pure-input-2-3" placeholder="Subject" required="required">
+
+			<label for="thread-content" class="pure-u-1-4">Content</label>
+			<textarea id="thread-content" name="comment" type="text" rows="5" cols="35" placeholder="Content" required="required"></textarea>
+
 			<div class="upload-container">
 				<button class="pure-button fake-button">Upload</button>
 				<input id="upload" name="image" type="file" accept="image/*">

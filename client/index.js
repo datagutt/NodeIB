@@ -62,6 +62,7 @@ function setup(app, siteName){
 	// Config
 	app.locals.siteName = siteName;
 	// Helpers
+	app.locals.slug = require('slug');
 	app.locals.now = function(){
 		return new Date();
 	};

@@ -6,7 +6,7 @@ module.exports = function threads(app, apiClient){
 			page = req.query.page ? parseInt(req.query.page, 10) : 1
 			perPage = 10,
 			offset = (page - 1) * perPage;
-		
+
 		async.waterfall([
 			function(_callback){
 				apiClient.getBoard(shortName, function(err, board){
@@ -36,6 +36,43 @@ module.exports = function threads(app, apiClient){
 				res.render('threads.html', {
 					'board': board,
 					'threads': threads,
+					'pagination': paginator.render()
+				});
+			}else{
+				res.render('404.html');
+			}
+		});
+	});
+	app.get('/:shortname/thread/:thread', function(req, res){
+		var shortName = req.params.shortname,
+			thread = req.params.thread,
+			page = req.query.page ? parseInt(req.query.page, 10) : 1
+			perPage = 10,
+			offset = (page - 1) * perPage;
+
+		async.waterfall([
+			function(_callback){
+				apiClient.getBoard(shortName, function(err, board){
+					_callback(err, board);
+				});
+			},
+			function(board, _callback){
+				var boardName = board.name.toLowerCase();
+				apiClient.getThread(thread, boardName, page, function(err, thread){
+					_callback(err, board, thread);
+				});
+			}
+		], function(err, board, thread){
+			if(board){
+				var paginator = new pagination.SearchPaginator({
+					'prelink': '/' + shortName + '/thread/' + thread,
+					'current': page,
+					'rowsPerPage': perPage,
+					'totalResult': thread.length
+				});
+				res.render('thread.html', {
+					'board': board,
+					'thread': thread,
 					'pagination': paginator.render()
 				});
 			}else{

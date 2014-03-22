@@ -15,7 +15,7 @@
 		</header>
 		<div class="post-image">
 			{% if thread.file %}
-			<a href="/uploads/full/{{ thread.file }}"><img src="/uploads/thumb/{{ thread.file }}"></a>
+			<a href="/uploads/full/{{ thread.file }}"><img src="/uploads/thumb/{{ thread.file }}" class="pure-img"></a>
 			{% endif %}
 		</div>
 		<div class="post-body">{{ thread.comment }}</div>
@@ -35,10 +35,11 @@
 		</header>
 		<div class="post-image">
 			{% if post.file %}
-			<a href="/uploads/full/{{ post.file }}"><img src="/uploads/thumb/{{ post.file }}"></a>
+			<a href="/uploads/full/{{ post.file }}"><img src="/uploads/thumb/{{ post.file }}" class="pure-img"></a>
 			{% endif %}
 		</div>
 		<div class="post-body">{{ post.comment }}</div>
 	</div>
 	{% endfor %}
+	<div style="clear: both;"></div>
 </article>
