@@ -124,13 +124,19 @@ module.exports = function(db){
 				_callback({'total': total});
 			});
 		},
-		getThread: function getThread(id, _callback){
-			var find = {};
+		getThread: function getThread(id, page, _callback){
+			var page = page ? parseInt(page, 10) : 1,
+				perPage = 10,
+				offset = (page - 1) * perPage,
+				find = {};
 
 			find['_id'] = id;
 			find['isParent'] = false;
 
 			Post.findOne(find)
+			.sort({updatedAt: -1})
+			.skip(offset)
+			.limit(perPage)
 			.lean()
 			.exec(function(err, thread){
 				if(thread){

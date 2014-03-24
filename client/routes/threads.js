@@ -81,16 +81,22 @@ module.exports = function threads(app, apiClient){
 		});
 	});
 	app.get('/:shortname/thread/:thread', function(req, res){
-		var thread = req.params.thread,
+		var shortName = req.params.shortname,
+			thread = req.params.thread,
 			page = req.query.page ? parseInt(req.query.page, 10) : 1
 			perPage = 10,
 			offset = (page - 1) * perPage;
 
 		async.waterfall([
 			function(_callback){
+				apiClient.getBoard(shortName, function(err, board){
+					_callback(err, board);
+				});
+			},
+			function(board, _callback){
 				var boardName = board.name.toLowerCase();
-				apiClient.getThread(thread, function(err, thread){
-					_callback(err, thread);
+				apiClient.getThread(thread, page, function(err, thread){
+					_callback(err, board, thread);
 				});
 			}
 		], function(err, board, thread){

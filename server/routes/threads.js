@@ -48,10 +48,11 @@ module.exports = function threads(app, api){
 		});
 	});
 
-	app.get('/thread/:thread', function(req, res){
-		var thread = req.params.thread;
+	app.get('/thread/:thread/:page?', function(req, res){
+		var thread = req.params.thread,
+			page = req.params.page;
 
-		ThreadApi.getThread(thread, function(err, thread){
+		ThreadApi.getThread(thread, page, function(err, thread){
 			if(thread){
 				async.map(thread, getThreadReplies, function(err, threads){
 					if(err){

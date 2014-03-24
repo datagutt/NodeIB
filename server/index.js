@@ -15,6 +15,7 @@ function setup(app, models){
 
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'swig');
+  app.set('json spaces', 1);
 	app.use(bodyParser());
 	app.use(expressValidator());
 	app.use(cookieParser());
