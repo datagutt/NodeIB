@@ -43,7 +43,29 @@ module.exports = {
 		if(shortname){
 			route += shortname;
 		}
-		
+
+		request({
+			method: 'get',
+			uri: apiUrl + route
+		}, function(err, response, json){
+			if(!checkResponse(err, response, _callback)) return;
+
+			parseJson(json, _callback, function(json){
+				_callback(null, json);
+			});
+		});
+	},
+	getThread: function(thread, page, _callback){
+		var route = '/getThread/';
+
+		if(thread){
+			route += '/' + thread;
+		}
+
+		if(page){
+			route += '/' + page;
+		}
+
 		request({
 			method: 'get',
 			uri: apiUrl + route
@@ -63,7 +85,7 @@ module.exports = {
 		}else{
 			route += 'all';
 		}
-		
+
 		if(page){
 			route += '/' + page;
 		}

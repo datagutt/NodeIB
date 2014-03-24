@@ -2,7 +2,7 @@ var async = require('async'),
 	_ = require('lodash');
 
 module.exports = function threads(app, api){
-	var ThreadApi = api.threads; 
+	var ThreadApi = api.threads;
 	var getThreadReplies = function(thread, _callback){
 		if(thread && thread._id){
 			ThreadApi.getThreadReplies(thread._id, function(err, replies){
@@ -17,21 +17,21 @@ module.exports = function threads(app, api){
 			_callback(true);
 		}
 	};
-	
+
 	app.get('/totalThreads/:board?', function(req, res){
 		var board = req.params.board;
-			
+
 		ThreadApi.getTotalThreads(board, function(total){
 			res.send(total);
 		});
 	});
-	
+
 	// The "?" after each parameter makes it optional
 	app.get('/threads/:board?/:page?', function(req, res){
 		var board = req.params.board,
 			page = req.params.page,
 			threads;
-			
+
 		ThreadApi.getIndexThreads(board, page, function(err, threads){
 			if(threads){
 				async.map(threads, getThreadReplies, function(err, threads){
@@ -40,6 +40,25 @@ module.exports = function threads(app, api){
 						res.send({'error': true, 'message': 'Error while retrieving replies'});
 					}else{
 						res.send(threads);
+					}
+				});
+			}else{
+				res.send([]);
+			}
+		});
+	});
+
+	app.get('/thread/:thread', function(req, res){
+		var thread = req.params.thread;
+
+		ThreadApi.getThread(thread, function(err, thread){
+			if(thread){
+				async.map(thread, getThreadReplies, function(err, threads){
+					if(err){
+						res.status(500);
+						res.send({'error': true, 'message': 'Error while retrieving replies'});
+					}else{
+						res.send(thread);
 					}
 				});
 			}else{
@@ -67,13 +86,13 @@ module.exports = function threads(app, api){
 		req.sanitize('name').escape();
 		req.sanitize('subject').escape();
 		req.sanitize('comment').escape();
-		
+
 		var errors = req.validationErrors(true);
 		if(errors){
 			res.status(500);
 			res.send({
-				'error': true, 
-				'message': 'Validation error.', 
+				'error': true,
+				'message': 'Validation error.',
 				'errors': errors
 			});
 		}
