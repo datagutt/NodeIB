@@ -100,7 +100,7 @@ module.exports = function threads(app, apiClient){
 				});
 			}
 		], function(err, board, thread){
-			if(board && thread.length){
+			if(board && Object.keys(thread).length){
 				var paginator = new pagination.SearchPaginator({
 					'prelink': '/' + shortName + '/thread/' + thread,
 					'current': page,

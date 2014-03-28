@@ -11,6 +11,10 @@
 				</span>
 				wrote
 				<span class="post-ago">{{ timeago(thread.createdAt) }}</span>
+				{% if thread.file %}
+					<i class="fa fa-thumb-tack"></i>
+				{% endif %}
+				<a href="/{{ board.shortname }}/thread/{{ thread._id }}">[Reply]</a>
 			</h3>
 		</header>
 		<div class="post-image">
@@ -31,6 +35,9 @@
 				</span>
 				wrote
 				<span class="post-ago">{{ timeago(post.createdAt) }}</span>
+				{% if thread.file %}
+					<i class="fa fa-thumb-tack"></i>
+				{% endif %}
 			</h3>
 		</header>
 		<div class="post-image">

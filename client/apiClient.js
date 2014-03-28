@@ -56,10 +56,10 @@ module.exports = {
 		});
 	},
 	getThread: function(thread, page, _callback){
-		var route = '/getThread/';
+		var route = '/thread/';
 
 		if(thread){
-			route += '/' + thread;
+			route += thread;
 		}
 
 		if(page){
