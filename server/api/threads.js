@@ -92,7 +92,7 @@ module.exports = function(db){
 				offset = (page - 1) * perPage,
 				find = {};
 
-			if(board && board !== 'all'){
+			if(board){
 				find['board'] = board;
 			}
 			find['isParent'] = false;
@@ -109,7 +109,7 @@ module.exports = function(db){
 		getTotalThreads: function getTotalThreads(board, _callback){
 			var find = {};
 
-			if(board && board !== 'all'){
+			if(board){
 				find['board'] = board;
 			}
 
@@ -121,7 +121,7 @@ module.exports = function(db){
 				if(!total){
 					total = 0;
 				}
-				_callback({'total': total});
+				_callback(err, {'total': total});
 			});
 		},
 		getThread: function getThread(id, page, _callback){
