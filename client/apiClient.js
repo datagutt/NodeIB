@@ -122,7 +122,23 @@ module.exports = {
 		});
 	},
 	newThread: function(params, _callback){
-		var route = '/newThread/';
+		var route = '/newThread';
+
+		if(!params){
+			params = {};
+		}
+		var data = JSON.stringify(params);
+
+		request.post(apiUrl + route, {form: params}, function(err, response, json){
+			if(!checkResponse(err, response, _callback)) return;
+
+			parseJson(json, _callback, function(json){
+				_callback(null, json);
+			});
+		});
+	},
+	newReply: function(params, _callback){
+		var route = '/newReply';
 
 		if(!params){
 			params = {};

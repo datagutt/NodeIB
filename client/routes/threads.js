@@ -44,20 +44,17 @@ module.exports = function threads(app, apiClient){
 			}
 		});
 	})
-	.post(function(req, res, next){
+	.post(function(req, res){
 		var shortName = req.params.shortname;
 
 		async.waterfall([
 			function(_callback){
 				apiClient.getBoard(shortName, function(err, board){
-					var boardName;
-					if(board && board.name){
-						boardName = board.name.toLowerCase();
-					}
-					_callback(err, boardName);
+					_callback(err, board);
 				});
 			},
 			function(boardName, _callback){
+				var boardName = board.name.toLowerCase();
 				apiClient.newThread({
 					'board': boardName,
 					'name': req.body.name,
@@ -80,7 +77,8 @@ module.exports = function threads(app, apiClient){
 			}
 		});
 	});
-	app.get('/:shortname/thread/:thread', function(req, res){
+	app.route('/:shortname/thread/:thread')
+	.get(function(req, res){
 		var shortName = req.params.shortname,
 			thread = req.params.thread,
 			page = req.query.page ? parseInt(req.query.page, 10) : 1
@@ -101,11 +99,16 @@ module.exports = function threads(app, apiClient){
 			}
 		], function(err, board, thread){
 			if(board && Object.keys(thread).length){
+				if(thread && threads.replies && thread.replies.length){
+					var totalResult = thread.replies.length;
+				}else{
+					var totalResult = 0;
+				}
 				var paginator = new pagination.SearchPaginator({
 					'prelink': '/' + shortName + '/thread/' + thread,
 					'current': page,
 					'rowsPerPage': perPage,
-					'totalResult': thread && thread.length ? thread.length : 0
+					'totalResult': totalResult
 				});
 				res.render('thread.html', {
 					'board': board,
@@ -114,6 +117,44 @@ module.exports = function threads(app, apiClient){
 				});
 			}else{
 				res.render('404.html');
+			}
+		});
+	})
+	.post(function(req, res){
+		var shortName = req.params.shortname,
+			thread = req.params.thread;
+
+		async.waterfall([
+			function(_callback){
+				apiClient.getBoard(shortName, function(err, board){
+					_callback(err, board);
+				});
+			},
+			function(board, _callback){
+				apiClient.getThread(thread, 0, function(err, thread){
+					_callback(err, board, thread);
+				});
+			},
+			function(board, thread, _callback){
+				var boardName = board.name.toLowerCase();
+				apiClient.newReply({
+					'hasParent': true,
+					'parent': thread._id,
+					'board': boardName,
+					'name': req.body.name,
+					'email': req.body.email,
+					'comment': req.body.comment,
+					'file': req.files.image,
+					'ip': req.connection.remoteAddress
+				}, _callback);
+			}
+		], function(err, thread){
+			if(err){
+				return res.json(JSON.parse(err.message));
+			}
+
+			if(thread){
+				res.redirect('/' + shortName + '/thread/' + thread.parent);
 			}
 		});
 	});

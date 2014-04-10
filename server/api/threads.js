@@ -68,7 +68,7 @@ module.exports = function(db){
 	var Schema = db.Schema;
 	var PostSchema = new Schema({
 		'board': String,
-		'isParent': Boolean,
+		'hasParent': Boolean,
 		'parent': {type: Schema.ObjectId, required: false},
 		'op': {type: Boolean, default: 0},
 		'ip': String,
@@ -95,7 +95,7 @@ module.exports = function(db){
 			if(board){
 				find['board'] = board;
 			}
-			find['isParent'] = false;
+			find['hasParent'] = false;
 
 			Post.find(find)
 			.sort({updatedAt: -1})
@@ -113,7 +113,7 @@ module.exports = function(db){
 				find['board'] = board;
 			}
 
-			find['isParent'] = false;
+			find['hasParent'] = false;
 
 			Post.count(find)
 			.lean()
@@ -131,7 +131,7 @@ module.exports = function(db){
 				find = {};
 
 			find['_id'] = id;
-			find['isParent'] = false;
+			find['hasParent'] = false;
 
 			Post.findOne(find)
 			.sort({updatedAt: -1})
@@ -149,7 +149,7 @@ module.exports = function(db){
 			var find = {};
 
 			find['parent'] = id;
-			find['isParent'] = true;
+			find['hasParent'] = true;
 
 			Post.find(find)
 			.sort({updatedAt: -1})
@@ -162,7 +162,7 @@ module.exports = function(db){
 			var p = {
 				'board': params.board,
 				'op': 1,
-				'isParent': false,
+				'hasParent': false,
 				'name': params.name,
 				'tripcode': '',
 				'email': params.email,
@@ -171,6 +171,33 @@ module.exports = function(db){
 				'sticky': params.sticky,
 				'ip': params.ip,
 				'closed': params.closed
+			};
+
+			uploadFile(params.file, function(err, filename){
+				if(err){
+					return _callback(err);
+				}
+
+				if(filename){
+					p['file'] = filename;
+				}
+				var t = new Post(formatPost(p));
+
+				t.save(function(err, thread){
+					_callback(err, thread);
+				});
+			});
+		},
+		newReply: function newReply(params, _callback){
+			var p = {
+				'hasParent': true,
+				'parent': params.parent,
+				'op': 1,
+				'board': params.board,
+				'name': params.name,
+				'email': params.email,
+				'comment': params.comment,
+				'ip': params.ip
 			};
 
 			uploadFile(params.file, function(err, filename){
