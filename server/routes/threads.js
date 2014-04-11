@@ -58,7 +58,7 @@ module.exports = function threads(app, api){
 
 		ThreadApi.getThread(thread, page, function(err, thread){
 			if(thread){
-				async.map(thread, getThreadReplies, function(err, threads){
+				getThreadReplies(thread, function(err, threads){
 					if(err){
 						res.status(500);
 						res.send({'error': true, 'message': 'Error while retrieving replies'});
