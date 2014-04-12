@@ -152,7 +152,7 @@ module.exports = function(db){
 			find['hasParent'] = true;
 
 			Post.find(find)
-			.sort({updatedAt: -1})
+			.sort({updatedAt: 1})
 			.lean()
 			.exec(function(err, replies){
 				_callback(err, replies);
