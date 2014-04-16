@@ -17,7 +17,7 @@ var uploadFile = function uploadFile(file, _callback){
 			var uploadPath = nconf.get('api:upload_path'),
 				full = path.join(uploadPath, 'full', filename),
 				thumb = path.join(uploadPath, 'thumb', filename);
-console.log(file);
+
 			if(!file.mimetype.match(/^image\//i)){
 				return _callback(new Error('Invalid file format'));
 			}
@@ -102,9 +102,7 @@ module.exports = function(db){
 			.skip(offset)
 			.limit(perPage)
 			.lean()
-			.exec(function(err, threads){
-				_callback(err, threads);
-			});
+			.exec(_callback);
 		},
 		getTotalThreads: function getTotalThreads(board, _callback){
 			var find = {};
@@ -154,9 +152,7 @@ module.exports = function(db){
 			Post.find(find)
 			.sort({updatedAt: 1})
 			.lean()
-			.exec(function(err, replies){
-				_callback(err, replies);
-			});
+			.exec(_callback);
 		},
 		newThread: function newThread(params, _callback){
 			var p = {
@@ -183,9 +179,7 @@ module.exports = function(db){
 				}
 				var t = new Post(formatPost(p));
 
-				t.save(function(err, thread){
-					_callback(err, thread);
-				});
+				t.save(_callback);
 			});
 		},
 		newReply: function newReply(params, _callback){
@@ -210,9 +204,7 @@ module.exports = function(db){
 				}
 				var t = new Post(formatPost(p));
 
-				t.save(function(err, thread){
-					_callback(err, thread);
-				});
+				t.save(_callback);
 			});
 		}
 	};

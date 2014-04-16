@@ -15,18 +15,26 @@ module.exports = function threads(app, apiClient){
 				});
 			},
 			function(board, _callback){
+				if(!board || !board.hasOwnProperty('name')){
+					var e = new Error('Board not found');
+					return _callback(e);
+				}
 				var boardName = board.name.toLowerCase();
 				apiClient.getIndexThreads(boardName, page, function(err, threads){
 					_callback(err, board, threads);
 				});
 			},
 			function(board, threads, _callback){
+				if(!board || !board.hasOwnProperty('name')){
+					var e = new Error('Board not found');
+					return _callback(e);
+				}
 				var boardName = board.name.toLowerCase();
 				apiClient.getTotalThreads(boardName, function(err, json){
 					_callback(err, board, threads, json.total);
 				});
 			}
-		], function(err, board, threads, total){
+		] , function(err, board, threads, total){
 			if(board){
 				var paginator = new pagination.SearchPaginator({
 					'prelink': '/' + shortName + '/',
@@ -54,6 +62,10 @@ module.exports = function threads(app, apiClient){
 				});
 			},
 			function(boardName, _callback){
+				if(!board || !board.hasOwnProperty('name')){
+					var e = new Error('Board not found');
+					return _callback(e);
+				}
 				var boardName = board.name.toLowerCase();
 				apiClient.newThread({
 					'board': boardName,
@@ -92,6 +104,10 @@ module.exports = function threads(app, apiClient){
 				});
 			},
 			function(board, _callback){
+				if(!board || !board.hasOwnProperty('name')){
+					var e = new Error('Board not found');
+					return _callback(e);
+				}
 				var boardName = board.name.toLowerCase();
 				apiClient.getThread(thread, page, function(err, thread){
 					_callback(err, board, thread);

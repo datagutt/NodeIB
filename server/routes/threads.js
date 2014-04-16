@@ -33,8 +33,7 @@ module.exports = function threads(app, api){
 	// The "?" after each parameter makes it optional
 	app.get('/threads/:board?/:page?', function(req, res){
 		var board = req.params.board,
-			page = req.params.page,
-			threads;
+			page = req.params.page;
 
 		ThreadApi.getIndexThreads(board, page, function(err, threads){
 			if(threads){
@@ -95,7 +94,7 @@ module.exports = function threads(app, api){
 		var errors = req.validationErrors(true);
 		if(errors){
 			res.status(500);
-			res.send({
+			return res.send({
 				'error': true,
 				'message': 'Validation error.',
 				'errors': errors
@@ -134,7 +133,7 @@ module.exports = function threads(app, api){
 			var errors = req.validationErrors(true);
 			if(errors){
 				res.status(500);
-				res.send({
+				return res.send({
 					'error': true,
 					'message': 'Validation error.',
 					'errors': errors

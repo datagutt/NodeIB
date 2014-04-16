@@ -8,7 +8,7 @@ var qs = require('qs'),
 function checkResponse(err, apiRes, next){
     if(err) return next(err);
 
-    if(apiRes && apiRes.statusCode === 500){
+    if(apiRes && [500, 401, 404].indexOf(apiRes.statusCode) > -1){
         next(new Error(apiRes.body));
         return false;
     }
@@ -18,7 +18,7 @@ function parseJson(json, next, success){
     try{
         json = JSON.parse(json);
     }catch(e){
-        return next(e);
+        return success({});
     }
     success(json);
 }
