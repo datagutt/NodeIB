@@ -57,7 +57,7 @@ module.exports = function threads(app, apiClient){
 			function(_callback){
 				apiClient.getBoard(shortName, _callback);
 			},
-			function(boardName, _callback){
+			function(board, _callback){
 				if(!board || !board.hasOwnProperty('name')){
 					var e = new Error('Board not found');
 					return _callback(e);
