@@ -10,9 +10,7 @@ module.exports = function threads(app, apiClient){
 
 		async.waterfall([
 			function(_callback){
-				apiClient.getBoard(shortName, function(err, board){
-					_callback(err, board);
-				});
+				apiClient.getBoard(shortName, _callback);
 			},
 			function(board, _callback){
 				if(!board || !board.hasOwnProperty('name')){
@@ -57,9 +55,7 @@ module.exports = function threads(app, apiClient){
 
 		async.waterfall([
 			function(_callback){
-				apiClient.getBoard(shortName, function(err, board){
-					_callback(err, board);
-				});
+				apiClient.getBoard(shortName, _callback);
 			},
 			function(boardName, _callback){
 				if(!board || !board.hasOwnProperty('name')){
@@ -99,9 +95,7 @@ module.exports = function threads(app, apiClient){
 
 		async.waterfall([
 			function(_callback){
-				apiClient.getBoard(shortName, function(err, board){
-					_callback(err, board);
-				});
+				apiClient.getBoard(shortName, _callback);
 			},
 			function(board, _callback){
 				if(!board || !board.hasOwnProperty('name')){
@@ -142,9 +136,7 @@ module.exports = function threads(app, apiClient){
 
 		async.waterfall([
 			function(_callback){
-				apiClient.getBoard(shortName, function(err, board){
-					_callback(err, board);
-				});
+				apiClient.getBoard(shortName, _callback);
 			},
 			function(board, _callback){
 				apiClient.getThread(thread, 0, function(err, thread){
