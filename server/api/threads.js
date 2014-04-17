@@ -7,9 +7,10 @@ var tripcode = require('tripcode'),
 	timestamps = require('mongoose-timestamp'),
 	tripsalt = nconf.get('api:tripsalt');
 
-const MAX_FILE_SIZE = 2 * 1024; /* 2 MB */
+const MAX_IMAGE_SIZE = 2 * 1024; /* 2 MB */
+const MAX_VIDEO_SIZE = 2 * 1024; /* 2 MB */
 
-var uploadFile = function uploadFile(file, _callback){
+var uploadImage = function uploadFile(file, _callback){
 	if(file && file.path && file.name){
 		var filename = 'upload-' + uuid.v1() + '.png';
 
@@ -21,7 +22,7 @@ var uploadFile = function uploadFile(file, _callback){
 			if(!file.mimetype.match(/^image\//i)){
 				return _callback(new Error('Invalid file format'));
 			}
-			if(buffer.length > parseInt(MAX_FILE_SIZE, 10) * 1024){
+			if(buffer.length > parseInt(MAX_IMAGE_SIZE, 10) * 1024){
 				return _callback(new Error('File too big'));
 			}
 
@@ -45,6 +46,20 @@ var uploadFile = function uploadFile(file, _callback){
 		});
 	}else{
 		_callback(null);
+	}
+};
+var uploadVideo = function(file, _callback){
+	return _callback(new Error('Video upload is not supported yet'))
+};
+var uploadFile = function uploadFile(file, _callback){
+	if(file && file.mimetype){
+		if(file.mimetype.match(/^image\//i)){
+			return uploadImage(file, _callback);
+		}else if(file.mimetype == 'video/webm'){
+			return uploadVideo(file, _callback);
+		}
+	}else{
+		callback(null);
 	}
 };
 var formatPost = function formatPost(post){
