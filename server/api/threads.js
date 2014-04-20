@@ -2,15 +2,72 @@ var tripcode = require('tripcode'),
 	uuid = require('node-uuid'),
 	easyimg = require('easyimage'),
 	path = require('path'),
-	fs = require('fs'),
+	fs = require('fs-extra'),
 	async = require('async'),
 	timestamps = require('mongoose-timestamp'),
+	FFmpeg = require('fluent-ffmpeg'),
+	Metadata = FFmpeg.Metadata,
 	tripsalt = nconf.get('api:tripsalt');
 
 const MAX_IMAGE_SIZE = 2 * 1024; /* 2 MB */
-const MAX_VIDEO_SIZE = 2 * 1024; /* 2 MB */
+const MAX_VIDEO_SIZE = 3 * 1024; /* 3 MB */
 
-var uploadImage = function uploadFile(file, _callback){
+var validateVideo = function validateVideo(file, filename, _callback){
+	console.log('a', file, filename);
+	var uploadPath = nconf.get('api:upload_path'),
+		full = path.join(uploadPath, 'full', filename);
+
+	new Metadata(file.path, function(metadata){
+		var errors = [];
+		if(!metadata){
+			return _callback(new Error('Could not find metadata'));
+		}
+
+		if(metadata.video && metadata.video.resolution){
+			var res =  metadata.video.resolution;
+			if(res.w > 2048 || res.h > 2048){
+				errors.push('Max video resolution is 2048x2048');
+			}
+		}
+
+		if(metadata.video && metadata.video.codec !== 'vp8'){
+			errors.push('Video must be in WebM format');
+		}
+
+		if(parseInt(metadata.durationsec, 10) > 120){
+			errors.push('Max video duration is 120 sec');
+		}
+
+		if(metadata.audio && metadata.audio.stream){
+			errors.push('Video can not contain an audio track')
+		}
+
+		if(errors.length > 0){
+			return _callback(new Error(errors.join('\n')));
+		}else{
+			fs.copy(file.path, full, function(err){
+				_callback(err, file, filename, _callback);
+			});
+		}
+	});
+};
+var generateVideoThumb = function generateVideoThumb(file, filename, _callback){
+	var uploadPath = nconf.get('api:upload_path'),
+		thumb = path.join(uploadPath, 'thumb', filename.replace('.webm', '.png'));
+
+	new FFmpeg({
+		source: filename
+	})
+	.withSize('128x128')
+	.on('error', function(err){
+		_callback(err, filename, thumb.replace(filename, 'placeholder.png'), _callback);
+	})
+	.on('end', function(err, thumb){
+		_callback(err, filename, thumb, _callback);
+	})
+  .takeScreenshots(1, thumb);
+};
+var uploadImage = function uploadImage(file, _callback){
 	if(file && file.path && file.name){
 		var filename = 'upload-' + uuid.v1() + '.png';
 
@@ -48,8 +105,31 @@ var uploadImage = function uploadFile(file, _callback){
 		_callback(null);
 	}
 };
-var uploadVideo = function(file, _callback){
-	return _callback(new Error('Video upload is not supported yet'))
+var uploadVideo = function uploadVideo(file, _callback){
+	//return _callback(new Error('Video upload is not supported yet'))
+	if(file && file.path && file.name){
+		var filename = 'upload-' + uuid.v1() + '.webm';
+			async.waterfall([
+				function(cb){
+					fs.readFile(file.path, function(err, buffer){
+						if(file.mimetype !== 'video/webm'){
+							return cb(new Error('Invalid file format'), null, null, cb);
+						}
+						if(buffer.length > parseInt(MAX_VIDEO_SIZE, 10) * 1024){
+							return cb(new Error('File too big'), null, null, cb);
+						}
+						return cb(null, file, filename, cb);
+					});
+				},
+				validateVideo,
+				generateVideoThumb
+			], function(err){
+				console.log(err);
+				_callback(err, filename);
+			});
+	}else{
+		_callback(null);
+	}
 };
 var uploadFile = function uploadFile(file, _callback){
 	if(file && file.mimetype){
@@ -74,6 +154,7 @@ var formatPost = function formatPost(post){
 			.digest('base64')
 			.toString();
 		}
+
 		post.tripcode = (secure ? '!!' : '!') + tripcode(trip);
 		post.name = post.name.slice(0, tripindex);
 	}
