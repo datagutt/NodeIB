@@ -12,14 +12,20 @@
 				wrote
 				<span class="post-ago">{{ timeago(thread.createdAt) }}</span>
 				{% if thread.file %}
-					<i class="fa fa-thumb-tack"></i>
+				<i class="fa fa-thumb-tack"></i>
 				{% endif %}
 				<a href="/{{ board.shortname }}/thread/{{ thread._id }}">[Reply]</a>
 			</h3>
 		</header>
 		<div class="post-image">
-			{% if thread.file %}
-			<a href="/uploads/full/{{ thread.file }}"><img src="/uploads/thumb/{{ thread.file }}" class="pure-img"></a>
+			{% if thread.type == 'video' %}
+			<video controls src="/uploads/full/{{ thread.file }}.{{ thread.ext }}" poster="/uploads/thumb/{{ thread.file }}.png">
+			Your browser does not support HTML5 video. <a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}">[Download]</a>
+			</video>
+			{% else %}
+				{% if thread.file %}
+				<a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}"><img src="/uploads/thumb/{{ thread.file }}.{{ thread.ext }}" class="pure-img"></a>
+				{% endif %}
 			{% endif %}
 		</div>
 		<div class="post-body">{{ thread.comment }}</div>
@@ -29,20 +35,27 @@
 		<header class="post-header">
 			<h3>
 				<span class="posted-by">
-					<span class="username">{{ post.name }}</span>									{% if post.tripcode %}
+					<span class="username">{{ post.name }}</span>
+					{% if post.tripcode %}
 					<span class="tripcode">{{ post.tripcode }}</span>
 					{% endif %}
 				</span>
 				wrote
 				<span class="post-ago">{{ timeago(post.createdAt) }}</span>
 				{% if thread.file %}
-					<i class="fa fa-thumb-tack"></i>
+				<i class="fa fa-thumb-tack"></i>
 				{% endif %}
 			</h3>
 		</header>
 		<div class="post-image">
-			{% if post.file %}
-			<a href="/uploads/full/{{ post.file }}"><img src="/uploads/thumb/{{ post.file }}" class="pure-img"></a>
+			{% if post.type == 'video' %}
+			<video controls src="/uploads/full/{{ post.file }}.{{ post.ext }}" poster="/uploads/thumb/{{ post.file }}.png">
+			Your browser does not support HTML5 video. <a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}">[Download]</a>
+			</video>
+			{% else %}
+				{% if post.file %}
+				<a href="/uploads/full/{{ post.file }}.{{ post.ext }}"><img src="/uploads/thumb/{{ post.file }}.{{ post.ext }}" class="pure-img"></a>
+				{% endif %}
 			{% endif %}
 		</div>
 		<div class="post-body">{{ post.comment }}</div>

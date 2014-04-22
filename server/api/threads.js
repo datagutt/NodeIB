@@ -13,18 +13,18 @@ const MAX_IMAGE_SIZE = 2 * 1024; /* 2 MB */
 const MAX_VIDEO_SIZE = 3 * 1024; /* 3 MB */
 
 var validateVideo = function validateVideo(file, filename, _callback){
-	console.log('a', file, filename);
+	//console.log('a', file, filename);
 	var uploadPath = nconf.get('api:upload_path'),
 		full = path.join(uploadPath, 'full', filename);
 
 	new Metadata(file.path, function(metadata){
 		var errors = [];
 		if(!metadata){
-			return _callback(new Error('Could not find metadata'));
+			return _callback(new Error('Could not find metadata'), file, filename);
 		}
 
 		if(metadata.video && metadata.video.resolution){
-			var res =  metadata.video.resolution;
+			var res = metadata.video.resolution;
 			if(res.w > 2048 || res.h > 2048){
 				errors.push('Max video resolution is 2048x2048');
 			}
@@ -43,29 +43,33 @@ var validateVideo = function validateVideo(file, filename, _callback){
 		}
 
 		if(errors.length > 0){
-			return _callback(new Error(errors.join('\n')));
+			return _callback(new Error(errors.join('\n')), file, filename);
 		}else{
 			fs.copy(file.path, full, function(err){
-				_callback(err, file, filename, _callback);
+				_callback(err, file, filename);
 			});
 		}
 	});
 };
 var generateVideoThumb = function generateVideoThumb(file, filename, _callback){
 	var uploadPath = nconf.get('api:upload_path'),
-		thumb = path.join(uploadPath, 'thumb', filename.replace('.webm', '.png'));
+		thumb = filename.replace('.webm', '');
 
 	new FFmpeg({
-		source: filename
+		source: file.path
 	})
 	.withSize('128x128')
 	.on('error', function(err){
-		_callback(err, filename, thumb.replace(filename, 'placeholder.png'), _callback);
+		_callback(err, filename, null);
 	})
-	.on('end', function(err, thumb){
-		_callback(err, filename, thumb, _callback);
+	.on('end', function(filenames){
+		_callback(null, filename, filenames[0]);
 	})
-  .takeScreenshots(1, thumb);
+  .takeScreenshots({
+		count: 1,
+  	filename: thumb,
+		fileextension: '.png'
+	}, path.join(uploadPath, 'thumb'));
 };
 var uploadImage = function uploadImage(file, _callback){
 	if(file && file.path && file.name){
@@ -113,18 +117,18 @@ var uploadVideo = function uploadVideo(file, _callback){
 				function(cb){
 					fs.readFile(file.path, function(err, buffer){
 						if(file.mimetype !== 'video/webm'){
-							return cb(new Error('Invalid file format'), null, null, cb);
+							return cb(new Error('Invalid file format'), null, null);
 						}
 						if(buffer.length > parseInt(MAX_VIDEO_SIZE, 10) * 1024){
-							return cb(new Error('File too big'), null, null, cb);
+							return cb(new Error('File too big'), null, null);
 						}
-						return cb(null, file, filename, cb);
+						cb(null, file, filename);
 					});
 				},
 				validateVideo,
 				generateVideoThumb
-			], function(err){
-				console.log(err);
+			], function(err, filename, thumb){
+				console.log(err, filename, thumb);
 				_callback(err, filename);
 			});
 	}else{
@@ -139,10 +143,10 @@ var uploadFile = function uploadFile(file, _callback){
 			return uploadVideo(file, _callback);
 		}
 	}else{
-		callback(null);
+		_callback(null);
 	}
 };
-var formatPost = function formatPost(post){
+var formatPost = function formatPost(post, _callback){
 	var tripindex = post.name.indexOf('#');
 	if(tripindex > -1){
 		var trip = post.name.substr(tripindex + 1),
@@ -158,6 +162,17 @@ var formatPost = function formatPost(post){
 		post.tripcode = (secure ? '!!' : '!') + tripcode(trip);
 		post.name = post.name.slice(0, tripindex);
 	}
+
+	if(post.ext){
+		post.type = post.ext == 'webm' ? 'video' : 'image';
+	}else{
+		post.type = 'text';
+	}
+
+	if(_callback){
+		_callback(null, post);
+	}
+
 	return post;
 };
 module.exports = function(db){
@@ -174,6 +189,7 @@ module.exports = function(db){
 		'subject': String,
 		'comment': String,
 		'file': String,
+		'ext': String,
 		'time': {type: Date, default: Date.now},
 		'closed': 0
 	}), Post;
@@ -248,7 +264,15 @@ module.exports = function(db){
 			Post.find(find)
 			.sort({updatedAt: 1})
 			.lean()
-			.exec(_callback);
+			.exec(function(err, replies){
+				if(replies){
+					async.map(replies, formatPost, function(e, replies){
+						_callback(err, replies);
+					});
+				}else{
+					_callback(err);
+				}
+			});
 		},
 		newThread: function newThread(params, _callback){
 			var p = {
@@ -271,7 +295,9 @@ module.exports = function(db){
 				}
 
 				if(filename){
-					p['file'] = filename;
+					var ext = path.extname(filename) || '.png';
+					p['ext'] = ext;
+					p['file'] = path.basename(filename, ext);
 				}
 				var t = new Post(formatPost(p));
 
@@ -296,7 +322,9 @@ module.exports = function(db){
 				}
 
 				if(filename){
-					p['file'] = filename;
+					var ext = path.extname(filename) || '.png';
+					p['ext'] = ext;
+					p['file'] = path.basename(filename, ext);
 				}
 				var t = new Post(formatPost(p));
 
