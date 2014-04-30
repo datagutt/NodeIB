@@ -3,19 +3,32 @@ var async = require('async'),
 
 module.exports = function threads(app, api){
 	var ThreadApi = api.threads;
-	var getThreadReplies = function(thread, _callback){
+	var getThreadReplies = function(thread, index, _callback){
 		var repliesShown = nconf.get('board:repliesShown');
 		if(thread && thread._id){
-			ThreadApi.getThreadReplies(thread._id, repliesShown, function(err, replies){
-				if(replies){
-					thread.omitted = (repliesShown == replies.length)
-						? 1
-						: 0;
-					thread.replies = replies;
-					_callback(null, thread);
-				}else{
-					_callback(err);
-				}
+			async.waterfall([
+				function(cb){
+					ThreadApi.getThreadReplies(thread._id, (index ? repliesShown : 0), function(err, replies){
+						cb(err, replies);
+					});
+				},
+				function(replies, cb){
+					if(replies){
+						thread.replies = replies;
+					}
+					if(repliesShown == replies.length){
+						ThreadApi.countThreadReplies(thread._id, function(err, totalReplies){
+							console.log(totalReplies);
+							thread.omitted = totalReplies - repliesShown;
+							cb(err, thread);
+						});
+					}else{
+						thread.omitted = 0;
+						cb(null, thread);
+					}
+				}],
+			function(err, thread){
+				_callback(err, thread);
 			});
 		}else{
 			_callback(true);
@@ -41,7 +54,9 @@ module.exports = function threads(app, api){
 
 		ThreadApi.getIndexThreads(board, page, function(err, threads){
 			if(threads){
-				async.map(threads, getThreadReplies, function(err, threads){
+				async.map(threads, function(reply, cb){
+						getThreadReplies(reply, true, cb);
+					}, function(err, threads){
 					if(err){
 						res.status(500);
 						res.send({'error': true, 'message': 'Error while retrieving replies'});
@@ -61,7 +76,7 @@ module.exports = function threads(app, api){
 
 		ThreadApi.getThread(thread, page, function(err, thread){
 			if(thread){
-				getThreadReplies(thread, function(err, threads){
+				getThreadReplies(thread, false, function(err, threads){
 					if(err){
 						res.status(500);
 						res.send({'error': true, 'message': 'Error while retrieving replies'});

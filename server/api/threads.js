@@ -141,6 +141,8 @@ var uploadFile = function uploadFile(file, _callback){
 			return uploadImage(file, _callback);
 		}else if(file.mimetype == 'video/webm'){
 			return uploadVideo(file, _callback);
+		}else{
+			_callback(null);
 		}
 	}else{
 		_callback(null);
@@ -275,7 +277,20 @@ module.exports = function(db){
 				}
 			});
 		},
-		countThreadReplies: function countThreadReplies(){
+		countThreadReplies: function countThreadReplies(id, _callback){
+			var find = {};
+
+			find['parent'] = id;
+			find['hasParent'] = true;
+
+			Post.count(find)
+			.lean()
+			.exec(function(err, total){
+				if(!total){
+					total = 0;
+				}
+				_callback(err, total);
+			});
 
 		},
 		newThread: function newThread(params, _callback){

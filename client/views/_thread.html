@@ -29,6 +29,9 @@
 			{% endif %}
 		</div>
 		<div class="post-body">{{ thread.comment }}</div>
+		{% if thread.omitted %}
+			<div class="omitted">{{ thread.omitted|raw }} posts omitted. Click [Reply] to view.</div>
+		{% endif %}
 	</div>
 	{% for post in thread.replies %}
 	<div class="thread-reply">
