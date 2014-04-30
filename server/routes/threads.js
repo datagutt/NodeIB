@@ -4,9 +4,13 @@ var async = require('async'),
 module.exports = function threads(app, api){
 	var ThreadApi = api.threads;
 	var getThreadReplies = function(thread, _callback){
+		var repliesShown = nconf.get('board:repliesShown');
 		if(thread && thread._id){
-			ThreadApi.getThreadReplies(thread._id, function(err, replies){
+			ThreadApi.getThreadReplies(thread._id, repliesShown, function(err, replies){
 				if(replies){
+					thread.omitted = (repliesShown == replies.length)
+						? 1
+						: 0;
 					thread.replies = replies;
 					_callback(null, thread);
 				}else{

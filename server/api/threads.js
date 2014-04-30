@@ -58,7 +58,7 @@ var generateVideoThumb = function generateVideoThumb(file, filename, _callback){
 	new FFmpeg({
 		source: file.path
 	})
-	.withSize('128x128')
+	.withSize(nconf.get('image:thumbnail:width') + 'x' + nconf.get('image:thumbnail:height'))
 	.on('error', function(err){
 		_callback(err, filename, null);
 	})
@@ -91,8 +91,8 @@ var uploadImage = function uploadImage(file, _callback){
 				easyimg.thumbnail({
 					'src': file.path,
 					'dst': thumb,
-					'width': 128,
-					'height': 128,
+					'width': nconf.get('image:thumbnail:width'),
+					'height': nconf.get('image:thumbnail:height'),
 					'x': 0,
 					'y': 0
 				}, cb);
@@ -200,7 +200,7 @@ module.exports = function(db){
 	return {
 		getIndexThreads: function getIndexThreads(board, page, _callback){
 			var page = page ? parseInt(page, 10) : 1,
-				perPage = 10,
+				perPage = nconf.get('board:threadsPerpage'),
 				offset = (page - 1) * perPage,
 				find = {};
 
@@ -236,7 +236,7 @@ module.exports = function(db){
 		},
 		getThread: function getThread(id, page, _callback){
 			var page = page ? parseInt(page, 10) : 1,
-				perPage = 10,
+				perPage = nconf.get('board:threadsPerPage'),
 				offset = (page - 1) * perPage,
 				find = {};
 
@@ -255,7 +255,7 @@ module.exports = function(db){
 				_callback(err, thread);
 			});
 		},
-		getThreadReplies: function getThreadReplies(id, _callback){
+		getThreadReplies: function getThreadReplies(id, limit, _callback){
 			var find = {};
 
 			find['parent'] = id;
@@ -263,6 +263,7 @@ module.exports = function(db){
 
 			Post.find(find)
 			.sort({updatedAt: 1})
+			.limit(limit)
 			.lean()
 			.exec(function(err, replies){
 				if(replies){
@@ -273,6 +274,9 @@ module.exports = function(db){
 					_callback(err);
 				}
 			});
+		},
+		countThreadReplies: function countThreadReplies(){
+
 		},
 		newThread: function newThread(params, _callback){
 			var p = {

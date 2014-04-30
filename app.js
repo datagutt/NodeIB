@@ -20,6 +20,17 @@
 			'port': 3100,
 			'siteName': 'NodeIB',
 			'upload_url':  '/public/uploads'
+		},
+		'image': {
+			'thumbnail': {
+				'width': 128,
+				'height': 128
+			}
+		},
+		'board': {
+			'threadsPerPage': 10,
+			'repliesShown': 5,
+			'maxThreads': 100
 		}
 	});
 
