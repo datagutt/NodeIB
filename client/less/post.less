@@ -1,3 +1,6 @@
+@threadSubject: #333;
+@postInfo: #777;
+@replyLink: #777;
 /* Post */
 .thread:after {
 	clear: both;
@@ -15,9 +18,9 @@
 	text-transform: none;
 	margin: 0 0 4px 0;
 	padding-top: 2px;
-	color: #333;
+	color: @threadSubject;
 }
-.post-image {
+.post-file {
 	float: left;
 	margin: 0 25px 0 0;
 
@@ -29,35 +32,47 @@
 }
 .post-header {
 	h3 {
-		display: block;
+		display: inline;
+		font-size: 110%;
+		margin: 0;
+	}
+	a,
+	a:visited {
+		text-decoration: none;
+	}
+	.info {
 		font-size: 15px;
 		margin: 0 0 12px 0;
 		padding: 0;
-		color: #777;
+		color: @postInfo;
 	}
-	h3 a, h3 a:visited {
-		margin-left: 8px;
-		color: #9C9C9C;
-		text-decoration: none;
+	.reply {
+		color: @replyLink;
+		font-weight: bold;
 	}
 	.posted-by {
 		font-size: 16px;
-		margin-right: 5px;
-		font-weight: bold;
+		font-weight: 800;
 	}
- 	.tripcode {
- 		font-weight: normal;
+	.tripcode {
+		font-weight: normal;
 	}
 	.post-ago {
 		margin: 0;
 		font-size: 15px;
+			a,
+			a:visited {
+				color: @postInfo;
+			}
 	}
 }
 .post.reply {
 	padding-bottom: 5px;
 }
-#first-post .post-body {
-	padding-bottom: 10px;
+#first-post {
+	.post-body {
+		padding-bottom: 10px;
+	}
 }
 .post-body {
 	margin: 0;
@@ -66,9 +81,11 @@
 	word-wrap: break-word;
 	white-space: pre-wrap;
 }
-.post-image video {
-	width: 255px;
-	height: 255px;
+.post-file {
+	video {
+		width: 255px;
+		height: 255px;
+	}
 }
 .omitted {
 	clear: both;

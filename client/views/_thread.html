@@ -2,23 +2,25 @@
 	<div id="first-post" class="post">
 		<header class="post-header">
 			<h2 id="thread-subject">{{ thread.subject }}</h2>
-			<h3>
-				<span class="posted-by">
-					<span class="username">{{ thread.name }}</span>
-					{% if thread.tripcode %}
-					<span class="tripcode">{{ thread.tripcode }}</span>
-					{% endif %}
-				</span>
+			<span class="info">
+				<h3>
+					<span class="posted-by">
+						<span class="username">{{ thread.name }}</span>
+						{% if thread.tripcode %}
+						<span class="tripcode">{{ thread.tripcode }}</span>
+						{% endif %}
+					</span>
+				</h3>
 				wrote
-				<span class="post-ago">{{ timeago(thread.createdAt) }}</span>
+				<span class="post-ago"><a href="/{{ board.shortname }}/thread/{{ thread._id }}" title="{{ thread.createdAt }}">{{ timeago(thread.createdAt) }}</a></span>
 				{% if thread.file %}
 				<i class="fa fa-thumb-tack"></i>
 				{% endif %}
-				<a href="/{{ board.shortname }}/thread/{{ thread._id }}">[Reply]</a>
-			</h3>
+				<a href="/{{ board.shortname }}/thread/{{ thread._id }}" class="reply">[Reply]</a>
+			</span>
 		</header>
-		<div class="post-image">
-			{% if thread.type == 'video' %}
+		<div class="post-file">
+			{% if thread.type == 'video' and thread.file %}
 			<video controls src="/uploads/full/{{ thread.file }}.{{ thread.ext }}" poster="/uploads/thumb/{{ thread.file }}.png">
 			Your browser does not support HTML5 video. <a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}">[Download]</a>
 			</video>
@@ -36,24 +38,26 @@
 	{% for post in thread.replies %}
 	<div class="post reply">
 		<header class="post-header">
-			<h3>
-				<span class="posted-by">
-					<span class="username">{{ post.name }}</span>
-					{% if post.tripcode %}
-					<span class="tripcode">{{ post.tripcode }}</span>
-					{% endif %}
-				</span>
+			<span class="info">
+				<h3>
+					<span class="posted-by">
+						<span class="username">{{ post.name }}</span>
+						{% if post.tripcode %}
+						<span class="tripcode">{{ post.tripcode }}</span>
+						{% endif %}
+					</span>
+				</h3>
 				wrote
 				<span class="post-ago">{{ timeago(post.createdAt) }}</span>
 				{% if thread.file %}
 				<i class="fa fa-thumb-tack"></i>
 				{% endif %}
-			</h3>
+			</span>
 		</header>
-		<div class="post-image">
-			{% if post.type == 'video' %}
+		<div class="post-file">
+			{% if post.type == 'video' and post.file %}
 			<video controls src="/uploads/full/{{ post.file }}.{{ post.ext }}" poster="/uploads/thumb/{{ post.file }}.png">
-			Your browser does not support HTML5 video. <a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}">[Download]</a>
+			Your browser does not support HTML5 video. <a href="/uploads/full/{{ post.file }}.{{ post.ext }}">[Download]</a>
 			</video>
 			{% else %}
 				{% if post.file %}
