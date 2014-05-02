@@ -1,6 +1,13 @@
 /* Post */
-.thread {
+.thread:after {
 	clear: both;
+	content: "";
+	display: block;
+}
+.post:after {
+	clear: both;
+	content: "";
+	display: block;
 }
 #thread-subject {
 	line-height: 1;
@@ -46,9 +53,8 @@
 		font-size: 15px;
 	}
 }
-.thread-reply {
+.post.reply {
 	padding-bottom: 5px;
-	clear: both;
 }
 #first-post .post-body {
 	padding-bottom: 10px;
@@ -57,6 +63,8 @@
 	margin: 0;
 	padding: 0 0 0 70px;
 	font-size: 14px;
+	word-wrap: break-word;
+	white-space: pre-wrap;
 }
 .post-image video {
 	width: 255px;
