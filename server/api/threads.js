@@ -58,7 +58,7 @@ var generateVideoThumb = function generateVideoThumb(file, filename, _callback){
 	new FFmpeg({
 		source: file.path
 	})
-	.withSize(nconf.get('image:thumbnail:width') + 'x' + nconf.get('image:thumbnail:height'))
+	.withSize(nconf.get('video:thumbnail:width') + 'x' + nconf.get('video:thumbnail:height'))
 	.on('error', function(err){
 		_callback(err, filename, null);
 	})
