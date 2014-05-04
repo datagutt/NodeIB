@@ -32,7 +32,7 @@
 				'width': 128,
 				'height': 128
 			}
-		}
+		},
 		'board': {
 			'threadsPerPage': 10,
 			'repliesShown': 5,
