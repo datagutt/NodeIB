@@ -18,13 +18,17 @@ function setup(app, siteName){
 	app.set('view cache', false);
 	app.set('views', __dirname + '/views');
 	swig.setDefaults({cache: false});
-	app.use(require('less-middleware')({
-      src: __dirname + '/less',
+	app.use(require('less-middleware')(
+		__dirname + '/less',
+		{
 			dest: __dirname + "/public/assets/stylesheets",
-      prefix: '/assets/stylesheets',
-			yuicompress: app.enabled('minification') ? true : false,
+			prefix: '/assets/stylesheets',
 			force: true
-	}));
+		},
+		{
+			yuicompress: app.enabled('minification') ? true : false,
+		}
+	));
 	app.use(express.static('uploads', nconf.get('api:upload_url')));
 	app.use(express.static(__dirname + '/public'));
 	app.use(bodyParser());
