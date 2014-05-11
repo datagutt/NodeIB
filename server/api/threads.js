@@ -1,4 +1,5 @@
 var tripcode = require('tripcode'),
+	crypto = require('crypto'),
 	uuid = require('node-uuid'),
 	easyimg = require('easyimage'),
 	path = require('path'),

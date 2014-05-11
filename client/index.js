@@ -9,7 +9,8 @@ var express = require('express'),
 	winston = require('winston'),
 	expressWinston = require('express-winston'),
 	path = require('path'),
-	fs = require('fs');
+	fs = require('fs'),
+	lessMiddleware = require('less-middleware');
 var app,
 	apiClient = require('./apiClient');
 function setup(app, siteName){
@@ -18,19 +19,18 @@ function setup(app, siteName){
 	app.set('view cache', false);
 	app.set('views', __dirname + '/views');
 	swig.setDefaults({cache: false});
-	app.use(require('less-middleware')(
-		__dirname + '/less',
-		{
-			dest: __dirname + "/public/assets/stylesheets",
-			prefix: '/assets/stylesheets',
+	app.use(lessMiddleware(path.join(__dirname, 'less'), {
+			dest: path.join(__dirname, 'public'),
+			preprocess: {
+				path: function(pathname, req){
+				 	return pathname.replace(/\/assets\/stylesheets\//, '/');
+				}
+			},
 			force: true
-		},
-		{
-			yuicompress: app.enabled('minification') ? true : false,
 		}
 	));
+	app.use(express.static(path.join(__dirname, 'public')));
 	app.use(express.static('uploads', nconf.get('api:upload_url')));
-	app.use(express.static(__dirname + '/public'));
 	app.use(bodyParser());
 	app.use(cookieParser());
 	app.use(expressSession({

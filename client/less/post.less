@@ -1,6 +1,8 @@
 @threadSubject: #333;
 @postInfo: #777;
-@replyLink: #777;
+@postName: #117743;
+@postTrip: #228854;
+@replyLink: inherit;
 /* Post */
 .thread:after {
 	clear: both;
@@ -54,7 +56,12 @@
 		font-size: 16px;
 		font-weight: 800;
 	}
+	.posted-by .name {
+		color: @postName;
+		font-weight: bold;
+	}
 	.tripcode {
+		color: @postTrip;
 		font-weight: normal;
 	}
 	.post-ago {
