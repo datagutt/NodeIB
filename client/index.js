@@ -79,13 +79,9 @@ function setup(app, siteName){
 	};
 
 	async.waterfall([
+		setupRoutes,
 		function(_callback){
-			setupRoutes(_callback);
-		},
-		function(_callback){
-			apiClient.getBoards(function(err, boards){
-				_callback(err, boards);
-			});
+			apiClient.getBoards(_callback);
 		},
 		function(boards, _callback){
 			app.get('*', function(req, res, next){
