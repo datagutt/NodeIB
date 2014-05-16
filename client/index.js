@@ -10,6 +10,7 @@ var express = require('express'),
 	expressWinston = require('express-winston'),
 	path = require('path'),
 	fs = require('fs'),
+	async = require('async'),
 	lessMiddleware = require('less-middleware');
 var app,
 	apiClient = require('./apiClient');
@@ -77,16 +78,52 @@ function setup(app, siteName){
 		return ago;
 	};
 
-	setupRoutes();
+	async.waterfall([
+		function(_callback){
+			setupRoutes(_callback);
+		},
+		function(_callback){
+			apiClient.getBoards(function(err, boards){
+				_callback(err, boards);
+			});
+		},
+		function(boards, _callback){
+			app.get('*', function(req, res, next){
+				res.status(404);
+				res.render('404.html');
+			});
+			_callback(boards);
+		}
+	], function(boards){
+		async.map(boards, function(board, cb){
+			cb(board.shortname);
+		}, function(results){
+			app.locals.boardNames = results;
+		})
+		app.locals.boards = boards;
+	});
 
-	app.get('*', function(req, res, next){
-		res.status(404);
-		res.render('404.html');
+	// MAJOR HACK: Too tired to do this properly
+	app.use(function(req, res, next){
+			var currentBoard;
+			try{
+				var url = req.url.split('/')[1],
+					match = url.match(/\w/);
+				if(url.length == match[0].length){
+					currentBoard = match[0];
+				}
+			}catch(e){}
+
+			if(app.locals.boardNames && app.locals.boardNames.indexOf(currentBoard) > -1){
+				res.locals.currentBoard = currentBoard;
+			}
+
+			next();
 	});
 }
 
-function setupRoutes(){
-	require('./routes')(app, apiClient);
+function setupRoutes(_callback){
+	require('./routes')(app, _callback);
 }
 
 function init(port, siteName){
