@@ -6,7 +6,7 @@
 	global.env = process.env.NODE_ENV || 'production';
 
 	nconf.argv().env();
-	nconf.file('default', 'config/' + global.env + '.json');
+	nconf.file('default', path.join('config', path.sep, global.env + '.json'));
 	nconf.set('base_dir', __dirname);
 	nconf.set('server_dir', path.join(nconf.get('base_dir'), path.sep, 'server'));
 	nconf.set('client_dir', path.join(nconf.get('base_dir'), path.sep, 'client'));
