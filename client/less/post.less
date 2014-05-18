@@ -1,4 +1,4 @@
-@threadSubject: #333;
+@threadSubject: #0f0c5d;
 @postInfo: #777;
 @postName: #117743;
 @postTrip: #228854;
@@ -15,26 +15,31 @@
 	display: block;
 }
 #thread-subject {
-	line-height: 1;
 	font-weight: bold;
-	text-transform: none;
-	margin: 0 0 4px 0;
-	padding-top: 2px;
 	color: @threadSubject;
+	padding: 0;
+	margin: 0;
+	font-size: 1em;
+	display: inline;
+	line-height: inherit;
 }
 .post-file {
-	float: left;
-	margin: 0 25px 0 0;
+	display: block;
+	.thumb {
+		float: left;
+		margin: 3px 20px 5px 20px;
 
-	img {
-		outline: 0 !important;
-		border: 0 !important;
-		vertical-align: middle;
+		img {
+			max-width: 100%;
+			vertical-align: middle;
+			border: 0;
+		}
 	}
 }
 .post-header {
 	h3 {
-		display: inline;
+		display: inline-block;
+		*display: inline;
 		font-size: 110%;
 		margin: 0;
 	}
@@ -48,7 +53,7 @@
 		padding: 0;
 		color: @postInfo;
 	}
-	.reply {
+	.reply-link {
 		color: @replyLink;
 		font-weight: bold;
 	}
@@ -73,8 +78,18 @@
 			}
 	}
 }
+.post {
+	margin: 4px 0;
+	overflow: hidden;
+}
 .post.reply {
-	padding-bottom: 5px;
+	background-color: #E9E9E9;
+	border: 1px solid #CCC;
+	border-width: 1px;
+	border-style: none solid solid none;
+	display: block;
+	margin: 0.2em 16px;
+	padding: 0.2em 0.3em 0.5em 0.6em;
 }
 #first-post {
 	.post-body {
@@ -82,8 +97,7 @@
 	}
 }
 .post-body {
-	margin: 0;
-	padding: 0 0 0 70px;
+	display: block;
 	font-size: 14px;
 	word-wrap: break-word;
 	white-space: pre-wrap;
@@ -95,5 +109,7 @@
 	}
 }
 .omitted {
+	display: block;
 	clear: both;
+	margin-top: 1em;
 }

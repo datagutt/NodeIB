@@ -1,5 +1,21 @@
 <article id="thread-{{ thread._id }}" class="thread">
 	<div id="first-post" class="post">
+		{% if thread.file %}
+		<div class="post-file">
+			<div class="text">
+			File: <a title="{{ thread.file }}.{{ thread.ext }}" href="/uploads/full/{{ thread.file }}.{{ thread.ext }}" target="_blank">{{ thread.file }}.{{ thread.ext }}</a>
+			</div>
+			<div class="thumb">
+				{% if thread.type == 'video' and thread.file %}
+				<video controls src="/uploads/full/{{ thread.file }}.{{ thread.ext }}" poster="/uploads/thumb/{{ thread.file }}.png">
+				Your browser does not support HTML5 video. <a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}">[Download]</a>
+				</video>
+				{% else %}
+					<a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}"><img src="/uploads/thumb/{{ thread.file }}.{{ thread.ext }}" class="pure-img"></a>
+				{% endif %}
+			</div>
+		</div>
+		{% endif %}
 		<header class="post-header">
 			<h2 id="thread-subject">{{ thread.subject }}</h2>
 			<span class="info">
@@ -11,62 +27,57 @@
 						{% endif %}
 					</span>
 				</h3>
-				wrote
-				<span class="post-ago"><a href="/{{ board.shortname }}/thread/{{ thread._id }}" title="{{ thread.createdAt }}">{{ timeago(thread.createdAt) }}</a></span>
+				<time class="post-ago" datetime="{{ thread.createdAt }}">{{ thread.createdAt|date(nconf.get('client:date_format')) }}</time>
 				{% if thread.file %}
 				<i class="fa fa-thumb-tack"></i>
 				{% endif %}
-				<a href="/{{ board.shortname }}/thread/{{ thread._id }}" class="reply">[Reply]</a>
+				<a href="/{{ board.shortname }}/thread/{{ thread._id }}" class="reply-link">[Reply]</a>
 			</span>
 		</header>
-		<div class="post-file">
-			{% if thread.type == 'video' and thread.file %}
-			<video controls src="/uploads/full/{{ thread.file }}.{{ thread.ext }}" poster="/uploads/thumb/{{ thread.file }}.png">
-			Your browser does not support HTML5 video. <a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}">[Download]</a>
-			</video>
-			{% else %}
-				{% if thread.file %}
-				<a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}"><img src="/uploads/thumb/{{ thread.file }}.{{ thread.ext }}" class="pure-img"></a>
-				{% endif %}
-			{% endif %}
-		</div>
 		<div class="post-body">{{ thread.comment }}</div>
 		{% if thread.omitted %}
 			<div class="omitted">{{ thread.omitted|raw }} posts omitted. Click [Reply] to view.</div>
 		{% endif %}
 	</div>
-	{% for post in thread.replies %}
-	<div class="post reply">
-		<header class="post-header">
-			<span class="info">
-				<h3>
-					<span class="posted-by">
-						<span class="name">{{ post.name }}</span>
-						{% if post.tripcode %}
-						<span class="tripcode">{{ post.tripcode }}</span>
-						{% endif %}
-					</span>
-				</h3>
-				wrote
-				<span class="post-ago">{{ timeago(post.createdAt) }}</span>
-				{% if thread.file %}
-				<i class="fa fa-thumb-tack"></i>
-				{% endif %}
-			</span>
-		</header>
-		<div class="post-file">
-			{% if post.type == 'video' and post.file %}
-			<video controls src="/uploads/full/{{ post.file }}.{{ post.ext }}" poster="/uploads/thumb/{{ post.file }}.png">
-			Your browser does not support HTML5 video. <a href="/uploads/full/{{ post.file }}.{{ post.ext }}">[Download]</a>
-			</video>
-			{% else %}
-				{% if post.file %}
-				<a href="/uploads/full/{{ post.file }}.{{ post.ext }}"><img src="/uploads/thumb/{{ post.file }}.{{ post.ext }}" class="pure-img"></a>
-				{% endif %}
+	<div class="replies">
+		{% for post in thread.replies %}
+		<div class="post reply">
+			<header class="post-header">
+				<span class="info">
+					<h3>
+						<span class="posted-by">
+							<span class="name">{{ post.name }}</span>
+							{% if post.tripcode %}
+							<span class="tripcode">{{ post.tripcode }}</span>
+							{% endif %}
+						</span>
+					</h3>
+					wrote
+					<time class="post-ago" datetime="{{ post.createdAt }}">{{ post.createdAt|date(nconf.get('client:date_format')) }}</time>
+					{% if thread.file %}
+					<i class="fa fa-thumb-tack"></i>
+					{% endif %}
+				</span>
+			</header>
+			{% if post.file %}
+			<div class="post-file">
+				<div class="text">
+				File: <a title="{{ post.file }}.{{ post.ext }}" href="/uploads/full/{{ post.file }}.{{ post.ext }}" target="_blank">{{ post.file }}.{{ post.ext }}</a>
+				</div>
+				<div class="thumb">
+					{% if post.type == 'video' and post.file %}
+					<video controls src="/uploads/full/{{ post.file }}.{{ post.ext }}" poster="/uploads/thumb/{{ post.file }}.png">
+					Your browser does not support HTML5 video. <a href="/uploads/full/{{ post.file }}.{{ post.ext }}">[Download]</a>
+					</video>
+					{% else %}
+						<a href="/uploads/full/{{ post.file }}.{{ post.ext }}"><img src="/uploads/thumb/{{ post.file }}.{{ post.ext }}" class="pure-img"></a>
+					{% endif %}
+				</div>
+			</div>
 			{% endif %}
+			<div class="post-body">{{ post.comment }}</div>
 		</div>
-		<div class="post-body">{{ post.comment }}</div>
+		{% endfor %}
 	</div>
-	{% endfor %}
 	<div style="clear: both;"></div>
 </article>
