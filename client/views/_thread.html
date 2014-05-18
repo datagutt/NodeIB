@@ -3,15 +3,15 @@
 		{% if thread.file %}
 		<div class="post-file">
 			<div class="text">
-			File: <a title="{{ thread.file }}.{{ thread.ext }}" href="/uploads/full/{{ thread.file }}.{{ thread.ext }}" target="_blank">{{ thread.file }}.{{ thread.ext }}</a>
+			File: <a title="{{ thread.file }}{{ thread.ext }}" href="/uploads/full/{{ thread.file }}{{ thread.ext }}" target="_blank">{{ thread.file }}{{ thread.ext }}</a>
 			</div>
 			<div class="thumb">
 				{% if thread.type == 'video' and thread.file %}
-				<video controls src="/uploads/full/{{ thread.file }}.{{ thread.ext }}" poster="/uploads/thumb/{{ thread.file }}.png">
-				Your browser does not support HTML5 video. <a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}">[Download]</a>
+				<video controls src="/uploads/full/{{ thread.file }}{{ thread.ext }}" poster="/uploads/thumb/{{ thread.file }}.png">
+				Your browser does not support HTML5 video. <a href="/uploads/full/{{ thread.file }}{{ thread.ext }}">[Download]</a>
 				</video>
 				{% else %}
-					<a href="/uploads/full/{{ thread.file }}.{{ thread.ext }}"><img src="/uploads/thumb/{{ thread.file }}.{{ thread.ext }}" class="pure-img"></a>
+					<a href="/uploads/full/{{ thread.file }}{{ thread.ext }}"><img src="/uploads/thumb/{{ thread.file }}{{ thread.ext }}" class="pure-img"></a>
 				{% endif %}
 			</div>
 		</div>
@@ -62,15 +62,15 @@
 			{% if post.file %}
 			<div class="post-file">
 				<div class="text">
-				File: <a title="{{ post.file }}.{{ post.ext }}" href="/uploads/full/{{ post.file }}.{{ post.ext }}" target="_blank">{{ post.file }}.{{ post.ext }}</a>
+				File: <a title="{{ post.file }}{{ post.ext }}" href="/uploads/full/{{ post.file }}{{ post.ext }}" target="_blank">{{ post.file }}{{ post.ext }}</a>
 				</div>
 				<div class="thumb">
 					{% if post.type == 'video' and post.file %}
-					<video controls src="/uploads/full/{{ post.file }}.{{ post.ext }}" poster="/uploads/thumb/{{ post.file }}.png">
-					Your browser does not support HTML5 video. <a href="/uploads/full/{{ post.file }}.{{ post.ext }}">[Download]</a>
+					<video controls src="/uploads/full/{{ post.file }}{{ post.ext }}" poster="/uploads/thumb/{{ post.file }}.png">
+					Your browser does not support HTML5 video. <a href="/uploads/full/{{ post.file }}{{ post.ext }}">[Download]</a>
 					</video>
 					{% else %}
-						<a href="/uploads/full/{{ post.file }}.{{ post.ext }}"><img src="/uploads/thumb/{{ post.file }}.{{ post.ext }}" class="pure-img"></a>
+						<a href="/uploads/full/{{ post.file }}{{ post.ext }}"><img src="/uploads/thumb/{{ post.file }}{{ post.ext }}" class="pure-img"></a>
 					{% endif %}
 				</div>
 			</div>

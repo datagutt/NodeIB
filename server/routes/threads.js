@@ -18,7 +18,6 @@ module.exports = function threads(app, api){
 					}
 					if(repliesShown == replies.length){
 						ThreadApi.countThreadReplies(thread._id, function(err, totalReplies){
-							console.log(totalReplies);
 							thread.omitted = totalReplies - repliesShown;
 							cb(err, thread);
 						});
@@ -105,6 +104,10 @@ module.exports = function threads(app, api){
 
 		req.checkBody('comment', 'Comment field can not be empty.').notEmpty();
 		req.checkBody('comment', 'Too many characters in comment field.').len(0, 10000);
+
+		if(nconf.get('board:op:fileRequired')){
+			req.assert(0, 'File is required').notNull(req.body.file.size);
+		}
 
 		req.sanitize('name').escape();
 		req.sanitize('subject').escape();

@@ -167,7 +167,7 @@ var formatPost = function formatPost(post, _callback){
 	}
 
 	if(post.ext){
-		post.type = post.ext == 'webm' ? 'video' : 'image';
+		post.type = post.ext == '.webm' ? 'video' : 'image';
 	}else{
 		post.type = 'text';
 	}

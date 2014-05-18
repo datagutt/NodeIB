@@ -36,6 +36,10 @@ function setupRoutes(models){
 	require('./routes')(app, models);
 }
 
+expressValidator.validator.extend('notNull', function (a, b){
+  return b !== null && b !== '0';
+});
+
 function init(port, host){
 	if(!app){
 		app = express();
