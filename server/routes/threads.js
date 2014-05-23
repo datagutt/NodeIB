@@ -5,7 +5,7 @@ module.exports = function threads(app, api){
 	var ThreadApi = api.threads;
 	var getThreadReplies = function(thread, index, _callback){
 		var repliesShown = nconf.get('board:repliesShown');
-		if(thread && thread._id){
+		if(thread && typeof thread._id == 'number'){
 			async.waterfall([
 				function(cb){
 					ThreadApi.getThreadReplies(thread._id, (index ? repliesShown : 0), function(err, replies){

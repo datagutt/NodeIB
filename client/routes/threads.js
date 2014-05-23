@@ -38,7 +38,7 @@ module.exports = function threads(app, apiClient){
 					'prelink': '/' + shortName + '/',
 					'current': page,
 					'rowsPerPage': perPage,
-					'totalResult': total
+					'totalResult': total || 0
 				});
 				res.render('threads.html', {
 					'board': board,
