@@ -52,7 +52,6 @@
 							{% endif %}
 						</span>
 					</h3>
-					wrote
 					<time class="post-ago" datetime="{{ post.createdAt }}">{{ post.createdAt|date(nconf.get('client:date_format')) }}</time>
 					{% if thread.file %}
 					<i class="fa fa-thumb-tack"></i>
