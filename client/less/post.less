@@ -14,20 +14,12 @@
 	content: "";
 	display: block;
 }
-#thread-subject {
-	font-weight: bold;
-	color: @threadSubject;
-	padding: 0;
-	margin: 0;
-	font-size: 1em;
-	display: inline;
-	line-height: inherit;
-}
 .post-file {
-	display: block;
 	.thumb {
+		display: block;
 		float: left;
-		margin: 3px 20px 5px 20px;
+		margin: 10px 20px;
+		border: none;
 
 		img {
 			max-width: 100%;
@@ -35,19 +27,32 @@
 			border: 0;
 		}
 	}
+	video {
+		width: 255px;
+		height: 255px;
+	}
+}
+.post-file .text {
+	display: block;
+	margin: 0;
+	padding-right: 7em;
 }
 .post-header {
-	h3 {
-		display: inline-block;
-		*display: inline;
-		font-size: 110%;
+	.subject {
+		font-weight: bold;
+		color: @threadSubject;
+		padding: 0;
 		margin: 0;
+		font-size: 1em;
+		line-height: inherit;
 	}
 	a,
 	a:visited {
 		text-decoration: none;
 	}
 	.info {
+		width: auto;
+		display: inline;
 		font-size: 15px;
 		margin: 0 0 12px 0;
 		padding: 0;
@@ -58,6 +63,9 @@
 		font-weight: bold;
 	}
 	.posted-by {
+		display: inline-block;
+		*display: inline;
+		margin: 0;
 		font-size: 16px;
 		font-weight: 800;
 	}
@@ -101,12 +109,6 @@
 	font-size: 14px;
 	word-wrap: break-word;
 	white-space: pre-wrap;
-}
-.post-file {
-	video {
-		width: 255px;
-		height: 255px;
-	}
 }
 .omitted {
 	display: block;

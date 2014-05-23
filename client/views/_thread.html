@@ -17,16 +17,14 @@
 		</div>
 		{% endif %}
 		<header class="post-header">
-			<h2 id="thread-subject">{{ thread.subject }}</h2>
 			<span class="info">
-				<h3>
-					<span class="posted-by">
-						<span class="name">{{ thread.name }}</span>
-						{% if thread.tripcode %}
-						<span class="tripcode">{{ thread.tripcode }}</span>
-						{% endif %}
-					</span>
-				</h3>
+				<span class="subject">{{ thread.subject }}</span>
+				<span class="posted-by">
+					<span class="name">{{ thread.name }}</span>
+					{% if thread.tripcode %}
+					<span class="tripcode">{{ thread.tripcode }}</span>
+					{% endif %}
+				</span>
 				<time class="post-ago" datetime="{{ thread.createdAt }}">{{ thread.createdAt|date(nconf.get('client:date_format')) }}</time>
 				{% if thread.file %}
 				<i class="fa fa-thumb-tack"></i>
@@ -44,14 +42,12 @@
 		<div class="post reply">
 			<header class="post-header">
 				<span class="info">
-					<h3>
-						<span class="posted-by">
-							<span class="name">{{ post.name }}</span>
-							{% if post.tripcode %}
-							<span class="tripcode">{{ post.tripcode }}</span>
-							{% endif %}
-						</span>
-					</h3>
+					<span class="posted-by">
+						<span class="name">{{ post.name }}</span>
+						{% if post.tripcode %}
+						<span class="tripcode">{{ post.tripcode }}</span>
+						{% endif %}
+					</span>
 					<time class="post-ago" datetime="{{ post.createdAt }}">{{ post.createdAt|date(nconf.get('client:date_format')) }}</time>
 					{% if thread.file %}
 					<i class="fa fa-thumb-tack"></i>
