@@ -44,13 +44,11 @@
 			</ul>
 		</div>
 	</header>
-	<div class="pure-g">
-		<main>
-			<div id="content">
+	<main>
+		<div id="content">
 {% block content %}{% endblock %}
-			</div>
-		</main>
-	</div>
+		</div>
+	</main>
 	<footer id="footer" class="pure-g">
 		<div class="pure-u-2-5">
 			<p>{{ siteName }} &copy; {{ now()|date('Y') }}</p>
