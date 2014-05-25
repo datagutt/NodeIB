@@ -19,6 +19,7 @@ function setup(app, siteName){
 	app.set('view engine', 'html');
 	app.set('view cache', false);
 	app.set('views', __dirname + '/views');
+	app.disable('x-powered-by');
 	swig.setDefaults({cache: false});
 	app.use(lessMiddleware(path.join(__dirname, 'less'), {
 			dest: path.join(__dirname, 'public'),
@@ -63,6 +64,10 @@ function setup(app, siteName){
 		meta: true,
 		msg: "HTTP {{req.method}} {{req.url}}"
 	}));
+	app.use(function(req, res, next){
+		res.setHeader('X-powered-by', 'NodeIB');
+		next();
+	});
 
 	// Config
 	app.locals.siteName = siteName;

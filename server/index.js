@@ -16,11 +16,13 @@ function setup(app, models){
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'swig');
   app.set('json spaces', 1);
+  app.disable('x-powered-by');
 	app.use(bodyParser());
 	app.use(expressValidator());
 	app.use(cookieParser());
 	app.use(expressSession({secret: 'secret'}));
 	app.use(function(req, res, next){
+    res.setHeader('X-powered-by', 'NodeIB');
 		res.type('json');
 		next();
 	});
