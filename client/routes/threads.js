@@ -32,7 +32,7 @@ module.exports = function threads(app, apiClient){
 					_callback(err, board, threads, json.total);
 				});
 			}
-		] , function(err, board, threads, total){
+		], function(err, board, threads, total){
 			if(board){
 				var paginator = new pagination.SearchPaginator({
 					'prelink': '/' + shortName + '/',

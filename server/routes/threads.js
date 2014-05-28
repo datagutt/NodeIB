@@ -8,9 +8,7 @@ module.exports = function threads(app, api){
 		if(thread && typeof thread._id == 'number'){
 			async.waterfall([
 				function(cb){
-					ThreadApi.getThreadReplies(thread._id, (index ? repliesShown : 0), function(err, replies){
-						cb(err, replies);
-					});
+					ThreadApi.getThreadReplies(thread._id, (index ? repliesShown : 0), cb);
 				},
 				function(replies, cb){
 					if(replies){
