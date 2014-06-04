@@ -37,7 +37,7 @@
 		'board': {
 			'threadsPerPage': 10,
 			'repliesShown': 5,
-			'maxThreads': 100,
+			'maxThreads': 2,
 			'op': {
 				'fileRequired': true
 			}

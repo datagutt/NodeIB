@@ -353,6 +353,43 @@ module.exports = function(db){
 
 				t.save(_callback);
 			});
+		},
+		clean: function(board, parent, _callback){
+			var find = {},
+				self = this,
+				threads = [],
+				offset = nconf.get('board:maxThreads');
+
+			if(board){
+				find['board'] = board;
+			}
+
+			find['hasParent'] = !!parent;
+			if(parent){
+				find['parent'] = parent;
+			}
+
+			Post
+			.find(find, null, {
+				skip: !parent ? offset : 0,
+				sort: {
+					updatedAt: -1
+				}
+			})
+			.exec(function(err, threads){
+				console.log(threads);
+				if(threads.length > 0){
+					threads.forEach(function(thread){
+						Post.remove({_id: thread._id}, function(err){
+							self.clean(board, thread._id);
+						});
+					});
+				}else{
+					// This is a single post (reply?)
+					Post.remove({_id: threads._id}, function(err){});
+				}
+			});
+			_callback(true);
 		}
 	};
 };

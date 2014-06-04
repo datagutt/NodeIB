@@ -32,6 +32,12 @@ module.exports = function threads(app, api){
 		}
 	};
 
+	app.get('/clean/:board', function(req, res){
+		ThreadApi.clean(req.params.board, null, function(result){
+			res.send({'result': result})
+		});
+	})
+
 	app.get('/totalThreads/:board?', function(req, res){
 		var board = req.params.board;
 
