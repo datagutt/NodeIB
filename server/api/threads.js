@@ -381,12 +381,19 @@ module.exports = function(db){
 				if(threads.length > 0){
 					threads.forEach(function(thread){
 						Post.remove({_id: thread._id}, function(err){
+							if(thread.file){
+								fs.unlinkSync(path.join(nconf.get('api:upload_path'), thread.file));
+							}
 							self.clean(board, thread._id);
 						});
 					});
 				}else{
 					// This is a single post (reply?)
-					Post.remove({_id: threads._id}, function(err){});
+					Post.remove({_id: threads._id}, function(err){
+							if(threads.file){
+								fs.unlinkSync(path.join(nconf.get('api:upload_path'), threads.file));
+							}
+					});
 				}
 			});
 			_callback(true);
