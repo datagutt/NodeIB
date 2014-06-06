@@ -1,6 +1,6 @@
 var qs = require('qs'),
 	apiUrl = 'http://localhost:3000',
-  request = require('request-json'),
+	request = require('request-json'),
 	client = request.newClient(apiUrl);
 function checkResponse(err, apiRes, next){
     if(err) return next(err);
