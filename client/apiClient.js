@@ -1,10 +1,7 @@
 var qs = require('qs'),
 	apiUrl = 'http://localhost:3000',
-    request = require('request').defaults({
-        encoding: 'utf8',
-        jar: false,
-        timeout: 30 * 1000
-    });
+  request = require('request-json'),
+	client = request.newClient(apiUrl);
 function checkResponse(err, apiRes, next){
     if(err) return next(err);
 
@@ -14,27 +11,14 @@ function checkResponse(err, apiRes, next){
     }
     return true;
 }
-function parseJson(json, next, success){
-    try{
-        json = JSON.parse(json);
-    }catch(e){
-        return success({});
-    }
-    success(json);
-}
 module.exports = {
 	getBoards: function(_callback){
 		var route = '/boards';
 
-		request({
-			method: 'get',
-			uri: apiUrl + route
-		}, function(err, response, json){
+		client.get(route, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-			parseJson(json, _callback, function(json){
-				_callback(null, json);
-			});
+			_callback(null, json);
 		});
 	},
 	getBoard: function(shortname, _callback){
@@ -44,15 +28,10 @@ module.exports = {
 			route += shortname;
 		}
 
-		request({
-			method: 'get',
-			uri: apiUrl + route
-		}, function(err, response, json){
+		client.get(route, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-			parseJson(json, _callback, function(json){
-				_callback(null, json);
-			});
+			_callback(null, json);
 		});
 	},
 	getThread: function(thread, page, _callback){
@@ -66,15 +45,10 @@ module.exports = {
 			route += '/' + page;
 		}
 
-		request({
-			method: 'get',
-			uri: apiUrl + route
-		}, function(err, response, json){
+		client.get(route, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-			parseJson(json, _callback, function(json){
-				_callback(null, json);
-			});
+			_callback(null, json);
 		});
 	},
 	getIndexThreads: function(board, page, _callback){
@@ -90,15 +64,10 @@ module.exports = {
 			route += '/' + page;
 		}
 
-		request({
-			method: 'get',
-			uri: apiUrl + route
-		}, function(err, response, json){
+		client.get(route, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-			parseJson(json, _callback, function(json){
-				_callback(null, json);
-			});
+			_callback(null, json);
 		});
 	},
 	getTotalThreads: function(board, _callback){
@@ -110,15 +79,10 @@ module.exports = {
 			route += 'all';
 		}
 
-		request({
-			method: 'get',
-			uri: apiUrl + route
-		}, function(err, response, json){
+		client.get(route, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-			parseJson(json, _callback, function(json){
-				_callback(null, json);
-			});
+			_callback(null, json);
 		});
 	},
 	newThread: function(params, _callback){
@@ -127,14 +91,11 @@ module.exports = {
 		if(!params){
 			params = {};
 		}
-		var data = JSON.stringify(params);
 
-		request.post(apiUrl + route, {form: params}, function(err, response, json){
+		client.post(route, params, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-			parseJson(json, _callback, function(json){
-				_callback(null, json);
-			});
+			_callback(null, json);
 		});
 	},
 	newReply: function(params, _callback){
@@ -143,14 +104,11 @@ module.exports = {
 		if(!params){
 			params = {};
 		}
-		var data = JSON.stringify(params);
 
-		request.post(apiUrl + route, {form: params}, function(err, response, json){
+		client.post(route, params, function(err, response, json){
 			if(!checkResponse(err, response, _callback)) return;
 
-			parseJson(json, _callback, function(json){
-				_callback(null, json);
-			});
+			_callback(null, json);
 		});
 	}
 };
