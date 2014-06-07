@@ -123,7 +123,7 @@ module.exports = function threads(app, api){
 			return res.send({
 				'error': true,
 				'message': 'Validation error.',
-				'errors': errors
+				'errors': errors.join
 			});
 		}
 

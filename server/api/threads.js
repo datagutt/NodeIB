@@ -75,37 +75,34 @@ var generateVideoThumb = function generateVideoThumb(file, filename, _callback){
 };
 var uploadImage = function uploadImage(file, _callback){
 	if(file && file.path && file.name){
-		var filename = 'upload-' + uuid.v1() + '.png';
+		var filename = 'upload-' + uuid.v1() + '.png',
+			uploadPath = nconf.get('api:upload_path'),
+			full = path.join(uploadPath, 'full', filename),
+			thumb = path.join(uploadPath, 'thumb', filename);
+		
+		if(!file.mimetype.match(/^image\//i)){
+			return _callback(new Error('Invalid file format'));
+		}
+		if(file.size > parseInt(MAX_IMAGE_SIZE, 10) * 1024){
+			return _callback(new Error('File too big'));
+		}
 
-		fs.readFile(file.path, function(err, buffer){
-			var uploadPath = nconf.get('api:upload_path'),
-				full = path.join(uploadPath, 'full', filename),
-				thumb = path.join(uploadPath, 'thumb', filename);
-
-			if(!file.mimetype.match(/^image\//i)){
-				return _callback(new Error('Invalid file format'));
-			}
-			if(buffer.length > parseInt(MAX_IMAGE_SIZE, 10) * 1024){
-				return _callback(new Error('File too big'));
-			}
-
-			async.parallel([function(cb){
-				easyimg.thumbnail({
-					'src': file.path,
-					'dst': thumb,
-					'width': nconf.get('image:thumbnail:width'),
-					'height': nconf.get('image:thumbnail:height'),
-					'x': 0,
-					'y': 0
-				}, cb);
-			}, function(cb){
-				easyimg.convert({
-					'src': file.path,
-					'dst': full
-				}, cb);
-			}], function(err){
-				_callback(err, filename);
-			});
+		async.parallel([function(cb){
+			easyimg.thumbnail({
+				'src': file.path,
+				'dst': thumb,
+				'width': nconf.get('image:thumbnail:width'),
+				'height': nconf.get('image:thumbnail:height'),
+				'x': 0,
+				'y': 0
+			}, cb);
+		}, function(cb){
+			easyimg.convert({
+				'src': file.path,
+				'dst': full
+			}, cb);
+		}], function(err){
+			_callback(err, filename);
 		});
 	}else{
 		_callback(null);
