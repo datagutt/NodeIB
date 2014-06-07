@@ -77,7 +77,7 @@ module.exports = function threads(app, apiClient){
 			}
 		], function(err, thread){
 			if(err){
-				return res.json(JSON.parse(err.message));
+				return res.json({'error': true, 'message': err.message});
 			}
 
 			if(thread){

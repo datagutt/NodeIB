@@ -135,6 +135,7 @@ module.exports = function threads(app, api){
 					'message': err.message
 				});
 			}else{
+				ThreadApi.clean(req.body.board);
 				res.send(thread || []);
 			}
 		});
