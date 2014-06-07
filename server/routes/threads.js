@@ -98,7 +98,7 @@ module.exports = function threads(app, api){
 		req.checkBody('name', 'Name can not be empty.').notEmpty();
 		req.checkBody('name', 'Too many characters in name field.').len(0, 100);
 
-		if(req.body.email !== ''){
+		if(req.body.email && req.body.email !== ''){
 			req.checkBody('email', 'Email field most contain a valid email.').isEmail();
 			req.checkBody('email', 'Too many characters in email field.').len(0, 100);
 		}
@@ -146,7 +146,7 @@ module.exports = function threads(app, api){
 			req.checkBody('name', 'Name can not be empty.').notEmpty();
 			req.checkBody('name', 'Too many characters in name field.').len(0, 100);
 
-			if(req.body.email !== ''){
+			if(req.body.email && req.body.email !== ''){
 				req.checkBody('email', 'Email field most contain a valid email.').isEmail();
 				req.checkBody('email', 'Too many characters in email field.').len(0, 100);
 			}
