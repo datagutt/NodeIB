@@ -6,7 +6,6 @@ function checkResponse(err, apiRes, next){
     if(err) return next(err);
 
     if(apiRes && [500, 401, 404].indexOf(apiRes.statusCode) > -1){
-				console.log(apiRes.body);
         next(new Error(JSON.stringify(apiRes.body)));
         return false;
     }
