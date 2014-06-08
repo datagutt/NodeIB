@@ -1,5 +1,26 @@
 var async = require('async'),
-	pagination = require('pure-css-pagination');
+	pagination = require('pagination');
+var template = '<ul class="pure-paginator">'
+	+ '<% if (first) { %>'
+	+ '<li><a href="<%-preparedPreLink + first %>" class="pure-button first">First</a></li>'
+	+ '<% } %>'
+	+ '<% if (previous) {%>'
+	+ '<li><a href="<%-preparedPreLink + previous %>" class="pure-button prev">&#171</a></li>'
+	+ '<% } %> '
+	+ '<% for ( var i = 0; i < range.length; i++ ) { %>'
+	+ '<% if (range[i] == current) { %>'
+	+ '<li><a href="<%-preparedPreLink %><%=range[i]%>" class="pure-button pure-button-active"><%=range[i]%></a></li>'
+	+ '<% }else{ %>'
+	+ '<li><a href="<%-preparedPreLink %><%=range[i]%>" class="pure-button"><%=range[i]%></a></li>'
+	+ '<% } %>'
+	+ '<% } %>'
+	+ '<% if (next) { %>'
+	+ '<li><a href="<%-preparedPreLink + next %>" class="pure-button">&#187;</a></li>'
+	+ '<% } %>'
+	+ '<% if (last) {%>'
+	+ '<li><a href="<%-preparedPreLink + last %>" class="pure-button last">Last</a></li>'
+	+ '<% } %>'
+	+ '</ul>';
 module.exports = function threads(app, apiClient){
 	app.route('/:shortname')
 	.get(function(req, res){
@@ -34,11 +55,12 @@ module.exports = function threads(app, apiClient){
 			}
 		], function(err, board, threads, total){
 			if(board){
-				var paginator = new pagination.SearchPaginator({
+				var paginator = new pagination.TemplatePaginator({
 					'prelink': '/' + shortName + '/',
 					'current': page,
 					'rowsPerPage': perPage,
-					'totalResult': total || 0
+					'totalResult': total || 0,
+					'template': template
 				});
 				res.render('threads.html', {
 					'board': board,
@@ -114,11 +136,12 @@ module.exports = function threads(app, apiClient){
 				}else{
 					var totalResult = 0;
 				}
-				var paginator = new pagination.SearchPaginator({
+				var paginator = new pagination.TemplatePaginator({
 					'prelink': '/' + shortName + '/thread/' + thread,
 					'current': page,
 					'rowsPerPage': perPage,
-					'totalResult': totalResult
+					'totalResult': totalResult,
+					'template': template
 				});
 				res.render('thread.html', {
 					'board': board,
