@@ -79,7 +79,7 @@ var uploadImage = function uploadImage(file, _callback){
 			uploadPath = nconf.get('api:upload_path'),
 			full = path.join(uploadPath, 'full', filename),
 			thumb = path.join(uploadPath, 'thumb', filename);
-		
+
 		if(!file.mimetype.match(/^image\//i)){
 			return _callback(new Error('Invalid file format'));
 		}
@@ -374,7 +374,6 @@ module.exports = function(db){
 				}
 			})
 			.exec(function(err, threads){
-				console.log(threads);
 				if(threads.length > 0){
 					threads.forEach(function(thread){
 						Post.remove({_id: thread._id}, function(err){
@@ -393,7 +392,9 @@ module.exports = function(db){
 					});
 				}
 			});
-			_callback(true);
+			if(typeof _callback == 'function'){
+				_callback(true);	
+			}
 		}
 	};
 };

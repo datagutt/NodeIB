@@ -110,6 +110,13 @@ module.exports = function threads(app, api){
 		req.checkBody('comment', 'Too many characters in comment field.').len(0, 10000);
 
 		if(nconf.get('board:op:fileRequired')){
+			// MAJOR HACK!
+			// Find out why this doesn't get sent in the first place
+			if(!req.body.file){
+				req.body.file = {
+					'size': 0
+				};
+			}
 			req.assert(0, 'File is required').notNull(req.body.file.size);
 		}
 
