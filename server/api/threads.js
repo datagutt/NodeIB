@@ -222,11 +222,15 @@ module.exports = function(db){
 		'file': String,
 		'ext': String,
 		'time': {type: Date, default: Date.now},
+		'type': String,
 		'closed': 0
 	}), Post;
 	autoIncrement.initialize(db.connection);
 	PostSchema.plugin(timestamps);
-	PostSchema.plugin(autoIncrement.plugin, 'Post');
+	PostSchema.plugin(autoIncrement.plugin, {
+		'model': 'Post',
+		'startAt': 1
+	});
 	PostSchema.set('redisCache', true);
 	Post = db.model('Post', PostSchema);
 
@@ -282,9 +286,6 @@ module.exports = function(db){
 			.limit(perPage)
 			.lean()
 			.exec(function(err, thread){
-				if(thread){
-					thread = formatPost(thread);
-				}
 				_callback(err, thread);
 			});
 		},
@@ -299,9 +300,7 @@ module.exports = function(db){
 			.lean()
 			.exec(function(err, replies){
 				if(replies){
-					async.map(replies, formatPost, function(e, replies){
-						_callback(err, replies);
-					});
+					_callback(err, replies);
 				}else{
 					_callback(err);
 				}
