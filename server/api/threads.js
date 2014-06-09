@@ -8,22 +8,54 @@ var tripcode = require('tripcode'),
 	timestamps = require('mongoose-timestamp'),
 	autoIncrement = require('mongoose-auto-increment'),
 	FFmpeg = require('fluent-ffmpeg'),
-	Metadata = FFmpeg.Metadata,
+	ffprobe = FFmpeg.ffprobe,
 	tripsalt = nconf.get('api:tripsalt');
 
 const MAX_IMAGE_SIZE = 2 * 1024; /* 2 MB */
 const MAX_VIDEO_SIZE = 3 * 1024; /* 3 MB */
 
+var parseMetadata = function(metadata){
+	if(metadata == null){
+		return null;
+	}
+
+	if(!metadata.format){
+		return null;
+	}
+
+	var data = {};
+	metadata.streams.forEach(function(s){
+		if(s.codec_type === 'video'){
+			data.video = {
+				'codec': s.codec_name,
+				'resolution': {
+					'w': s.width,
+					'h': s.height
+				}
+			};
+		}else if(s.codec_type === 'audio'){
+			data.audio = {
+				'codec': s.codec_name,
+			};
+		}
+	});
+
+	data.container = metadata.format.format_name.split(',')[0];
+	data.bitrate = parseInt(metadata.format.bit_rate) / 1000;
+	data.seconds = Math.ceil(parseFloat(metadata.format.duration));
+	return data;
+};
 var validateVideo = function validateVideo(file, filename, _callback){
 	//console.log('a', file, filename);
 	var uploadPath = nconf.get('api:upload_path'),
 		full = path.join(uploadPath, 'full', filename);
 
-	new Metadata(file.path, function(metadata){
+	ffprobe(file.path, function(err, metadata){
 		var errors = [];
 		if(!metadata){
 			return _callback(new Error('Could not find metadata'), file, filename);
 		}
+		metadata = parseMetadata(metadata);
 
 		if(metadata.video && metadata.video.resolution){
 			var res = metadata.video.resolution;
@@ -36,11 +68,11 @@ var validateVideo = function validateVideo(file, filename, _callback){
 			errors.push('Video must be in WebM format');
 		}
 
-		if(parseInt(metadata.durationsec, 10) > 120){
+		if(parseFloat(metadata.seconds) > 120){
 			errors.push('Max video duration is 120 sec');
 		}
 
-		if(metadata.audio && metadata.audio.stream){
+		if(metadata.audio){
 			errors.push('Video can not contain an audio track')
 		}
 
@@ -393,7 +425,7 @@ module.exports = function(db){
 				}
 			});
 			if(typeof _callback == 'function'){
-				_callback(true);	
+				_callback(true);
 			}
 		}
 	};
