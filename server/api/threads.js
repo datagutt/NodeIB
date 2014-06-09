@@ -212,9 +212,7 @@ module.exports = function(db){
 	var Schema = db.Schema;
 	var PostSchema = new Schema({
 		'board': String,
-		'hasParent': Boolean,
-		'parent': {type: Number, required: false},
-		'op': {type: Boolean, default: 0},
+		'parent': {type: Number, required: true, default: 0},
 		'ip': String,
 		'name': String,
 		'tripcode': String,
@@ -242,7 +240,7 @@ module.exports = function(db){
 			if(board){
 				find['board'] = board;
 			}
-			find['hasParent'] = false;
+			find['parent'] = 0;
 
 			Post.find(find)
 			.sort({updatedAt: -1})
@@ -258,7 +256,7 @@ module.exports = function(db){
 				find['board'] = board;
 			}
 
-			find['hasParent'] = false;
+			find['parent'] = 0;
 
 			Post.count(find)
 			.lean()
@@ -276,7 +274,7 @@ module.exports = function(db){
 				find = {};
 
 			find['_id'] = id;
-			find['hasParent'] = false;
+			find['parent'] = 0;
 
 			Post.findOne(find)
 			.sort({updatedAt: -1})
@@ -294,7 +292,6 @@ module.exports = function(db){
 			var find = {};
 
 			find['parent'] = id;
-			find['hasParent'] = true;
 
 			Post.find(find)
 			.sort({updatedAt: 1})
@@ -314,7 +311,6 @@ module.exports = function(db){
 			var find = {};
 
 			find['parent'] = id;
-			find['hasParent'] = true;
 
 			Post.count(find)
 			.lean()
@@ -329,8 +325,6 @@ module.exports = function(db){
 		newThread: function newThread(params, _callback){
 			var p = {
 				'board': params.board,
-				'op': 1,
-				'hasParent': false,
 				'name': params.name,
 				'tripcode': '',
 				'email': params.email,
@@ -358,9 +352,7 @@ module.exports = function(db){
 		},
 		newReply: function newReply(params, _callback){
 			var p = {
-				'hasParent': true,
 				'parent': params.parent,
-				'op': 1,
 				'board': params.board,
 				'name': params.name,
 				'email': params.email,
@@ -393,9 +385,10 @@ module.exports = function(db){
 				find['board'] = board;
 			}
 
-			find['hasParent'] = !!parent;
 			if(parent){
 				find['parent'] = parent;
+			}else{
+				find['parent'] = 0;
 			}
 
 			Post
