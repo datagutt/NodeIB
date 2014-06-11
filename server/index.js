@@ -13,8 +13,6 @@ function setup(app, models){
 	mongoose.connect('mongodb://localhost/nodeib');
 	mongooseRedisCache(mongoose);
 
-	app.set('views', __dirname + '/views');
-	app.set('view engine', 'swig');
   app.set('json spaces', 1);
   app.disable('x-powered-by');
 	app.use(bodyParser());
@@ -30,7 +28,7 @@ function setup(app, models){
 	setupRoutes(models);
 
 	app.get('*', function(req, res){
-		res.send({}, 404);
+		res.send([], 404);
 	});
 }
 
