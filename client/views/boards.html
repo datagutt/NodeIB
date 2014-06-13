@@ -1,16 +1,27 @@
 {% extends "base.html" %}
 {% set stylesheets = ["boards.css"] %}
 {% block content %}
-<div class="pure-u-1">
-	<h1>Boards</h1>
-	<div id="boards">
-{% for board in boards %}
-		<div class="board">
-			<header>
-				<h3><a href="/{{ board.shortname'}}/">/{{ board.shortname }}/ - {{ board.name }}</a></h3>
-			</header>
+<div class="home">
+	<div class="pure-g">
+		<div class="pure-u-2-5 left">
+			<h2>What is this?</h2>
+			<p>{{ siteName }} is a simple anonymous image-based message board where anyone can post comments and share images.</p>
+			<p>You don't need a account to post.</p>
+		</h2>
 		</div>
-{% endfor %}
+		<div class="pure-u-2-5 right">
+			<h2>Boards</h2>
+			<div id="boards">
+			{% for board in boards %}
+				<div class="board">
+					<header>
+						<h3><a href="/{{ board.shortname'}}/">/{{ board.shortname }}/ - {{ board.name }}</a></h3>
+					</header>
+				</div>
+			{% endfor %}
+			</div>
+		</h2>
+		</div>
 	</div>
 </div>
 {% endblock %}
