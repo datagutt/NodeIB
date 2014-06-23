@@ -268,7 +268,7 @@ module.exports = function(db){
 				if(!total){
 					total = 0;
 				}
-				_callback(err, {'total': total});
+				_callback(err, total);
 			});
 		},
 		getThread: function getThread(id, page, _callback){

@@ -46,7 +46,7 @@ module.exports = function threads(app, api){
 				res.status(500);
 				res.send({'error': true, 'message': err.message});
 			}
-			res.send(total);
+			res.send({'total': total});
 		});
 	});
 
