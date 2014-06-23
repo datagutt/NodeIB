@@ -85,9 +85,7 @@ function setup(app, siteName){
 
 	async.waterfall([
 		setupRoutes,
-		function(_callback){
-			apiClient.getBoards(_callback);
-		},
+		apiClient.getBoards,
 		function(boards, _callback){
 			app.get('*', function(req, res, next){
 				res.status(404);
