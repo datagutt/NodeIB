@@ -23,10 +23,7 @@ module.exports = function threads(app, api){
 						thread.omitted = 0;
 						cb(null, thread);
 					}
-				}],
-			function(err, thread){
-				_callback(err, thread);
-			});
+				}], _callback);
 		}else{
 			_callback(true);
 		}

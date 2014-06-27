@@ -158,10 +158,7 @@ var uploadVideo = function uploadVideo(file, _callback){
 				},
 				validateVideo,
 				generateVideoThumb
-			], function(err, filename, thumb){
-				console.log(err, filename, thumb);
-				_callback(err, filename);
-			});
+			], _callback);
 	}else{
 		_callback(null);
 	}
