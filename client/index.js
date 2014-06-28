@@ -33,7 +33,8 @@ function setup(app, siteName){
 	));
 	app.use(express.static(path.join(__dirname, 'public')));
 	app.use(express.static('uploads', nconf.get('api:upload_url')));
-	app.use(bodyParser());
+	app.use(bodyParser.urlencoded());
+	app.use(bodyParser.json());
 	app.use(cookieParser());
 	app.use(expressSession({
 		secret: 'secret',

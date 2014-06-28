@@ -15,7 +15,8 @@ function setup(app, models){
 
   app.set('json spaces', 1);
   app.disable('x-powered-by');
-	app.use(bodyParser());
+  app.use(bodyParser.urlencoded());
+  app.use(bodyParser.json());
 	app.use(expressValidator());
 	app.use(cookieParser());
 	app.use(expressSession({secret: 'secret'}));
