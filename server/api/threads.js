@@ -141,7 +141,6 @@ var uploadImage = function uploadImage(file, _callback){
 	}
 };
 var uploadVideo = function uploadVideo(file, _callback){
-	//return _callback(new Error('Video upload is not supported yet'))
 	if(file && file.path && file.name){
 		var filename = 'upload-' + uuid.v1() + '.webm';
 			async.waterfall([
@@ -182,6 +181,7 @@ var formatPost = function formatPost(post, _callback){
 		var trip = post.name.substr(tripindex + 1),
 			secure = trip.indexOf('#') === 0;
 
+		// If tripcode contains #, hash it with site-specific salt
 		if(secure){
 			trip = crypto.createHash('sha1')
 			.update(trip.substr(1) + tripsalt)
@@ -282,9 +282,7 @@ module.exports = function(db){
 			.skip(offset)
 			.limit(perPage)
 			.lean()
-			.exec(function(err, thread){
-				_callback(err, thread);
-			});
+			.exec(_callback);
 		},
 		getThreadReplies: function getThreadReplies(id, limit, _callback){
 			var find = {};
@@ -295,13 +293,7 @@ module.exports = function(db){
 			.sort({updatedAt: 1})
 			.limit(limit)
 			.lean()
-			.exec(function(err, replies){
-				if(replies){
-					_callback(err, replies);
-				}else{
-					_callback(err);
-				}
-			});
+			.exec(_callback);
 		},
 		countThreadReplies: function countThreadReplies(id, _callback){
 			var find = {};
