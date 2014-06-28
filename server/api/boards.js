@@ -11,15 +11,20 @@ module.exports = function(db){
 		getBoards: function(_callback){
 			Board.find()
 			.lean()
-			.exec(function(err, boards){
-				_callback(err, boards);
-			});
+			.exec(_callback);
 		},
 		getBoard: function(shortname, _callback){
 			Board.findOne({'shortname': shortname})
 			.lean()
-			.exec(function(err, boards){
-				_callback(err, boards);
+			.exec(_callback);
+		},
+		newBoard: function(params, _callback){
+			var b = new Board(params);
+			b.save(_callback);
+		},
+		removeBoard: function(shortname, _callback){
+			Board.remove({'shortname': shortname}, function(err){
+				console.log(err);
 			});
 		}
 	};
