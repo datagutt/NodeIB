@@ -13,15 +13,15 @@ function setup(app, models){
 	mongoose.connect('mongodb://localhost/nodeib');
 	mongooseRedisCache(mongoose);
 
-  app.set('json spaces', 1);
-  app.disable('x-powered-by');
-  app.use(bodyParser.urlencoded());
-  app.use(bodyParser.json());
+ 	app.set('json spaces', 1);
+ 	app.disable('x-powered-by');
+ 	app.use(bodyParser.urlencoded());
+ 	app.use(bodyParser.json());
 	app.use(expressValidator());
 	app.use(cookieParser());
 	app.use(expressSession({secret: 'secret'}));
 	app.use(function(req, res, next){
-    res.setHeader('X-powered-by', 'NodeIB');
+ 		res.setHeader('X-powered-by', 'NodeIB');
 		res.type('json');
 		next();
 	});
