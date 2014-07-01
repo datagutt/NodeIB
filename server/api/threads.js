@@ -101,7 +101,7 @@ var generateVideoThumb = function generateVideoThumb(file, filename, _callback){
 	})
   .takeScreenshots({
 		count: 1,
-  	filename: thumb,
+ 		filename: thumb,
 		fileextension: '.png'
 	}, path.join(uploadPath, 'thumb'));
 };
