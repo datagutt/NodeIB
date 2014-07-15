@@ -208,8 +208,8 @@ var formatPost = function formatPost(post, _callback){
 module.exports = function(db){
 	var Schema = db.Schema;
 	var PostSchema = new Schema({
-		'board': String,
-		'parent': {type: Number, required: true, default: 0},
+		'board': {type: String, ref: 'board', required: true, index: true},
+		'parent': {type: Number, required: true, default: 0, index: true},
 		'ip': String,
 		'name': String,
 		'tripcode': String,
