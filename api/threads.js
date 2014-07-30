@@ -127,12 +127,28 @@ var uploadImage = function uploadImage(file, _callback){
 				'height': nconf.get('image:thumbnail:height'),
 				'x': 0,
 				'y': 0
-			}, cb);
+			})
+			.then(
+				function(image){
+					cb(null, image);
+				},
+				function(err){
+					cb(err);
+				}
+			);
 		}, function(cb){
 			easyimg.convert({
 				'src': file.path,
 				'dst': full
-			}, cb);
+			})
+			.then(
+				function(image){
+					cb(null, image);
+				},
+				function(err){
+					cb(err);
+				}
+			);
 		}], function(err){
 			_callback(err, filename);
 		});
