@@ -1,6 +1,7 @@
 var async = require('async');
 module.exports = function(app, api){
 	var routes = [
+		'config',
 		'threads',
 		'boards'
 	];
