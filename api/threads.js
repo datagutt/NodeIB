@@ -379,6 +379,22 @@ module.exports = function(db){
 				t.save(_callback);
 			});
 		},
+		bumpThread: function(id, _callback){
+			var find = {},
+				self = this;
+
+			if(id){
+				find['_id'] = id;
+			}
+			find['parent'] = 0;
+			Post
+			.findOne(find)
+			.lean()
+			.exec(function(err, thread){
+				thread.updatedAt = new Date;
+				thread.save();
+			});
+		},
 		clean: function(board, parent, _callback){
 			var find = {},
 				self = this,
