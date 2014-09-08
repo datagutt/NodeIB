@@ -179,6 +179,13 @@ module.exports = function threads(app, api){
 						'message': err.message
 					});
 				}else{
+					if(post && post.parent){
+						console.log(post.parent);
+						ThreadApi.bumpThread(post.parent);
+					}else if(post.id && !post.parent){
+						console.log(post._id);
+						ThreadApi.bumpThread(post._id);
+					}
 					res.send(post || []);
 				}
 			});

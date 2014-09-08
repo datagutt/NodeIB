@@ -234,7 +234,6 @@ module.exports = function(db){
 		'comment': String,
 		'file': String,
 		'ext': String,
-		'time': {type: Date, default: Date.now},
 		'type': String,
 		'closed': 0
 	}), Post;
@@ -383,17 +382,13 @@ module.exports = function(db){
 			var find = {},
 				self = this;
 
-			if(id){
-				find['_id'] = id;
-			}
+			find['_id'] = id;
 			find['parent'] = 0;
+
 			Post
-			.findOne(find)
-			.lean()
-			.exec(function(err, thread){
-				thread.updatedAt = new Date;
-				thread.save();
-			});
+			.update(find, {
+				updatedAt: new Date()
+			}, null, _callback);
 		},
 		clean: function(board, parent, _callback){
 			var find = {},
