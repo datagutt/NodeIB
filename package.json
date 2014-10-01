@@ -32,7 +32,7 @@
     "express-validator": "^2.3.0",
     "express-winston": "~0.2.5",
     "fluent-ffmpeg": "^2.0.0-rc2",
-    "fs-extra": "^0.11.0",
+    "fs-extra": "^0.12.0",
     "less-middleware": "^1.0.3",
     "lodash": "~2.4.1",
     "mongoose": "^3.8.8",
@@ -44,12 +44,12 @@
     "pagination": "^0.4.2",
     "qs": "^2.2.1",
     "request-json": "^0.4.10",
-    "slug": "^0.5.0",
+    "slug": "^0.7.1",
     "static-favicon": "^2.0.0-alpha",
     "swig": "^1.4.1",
     "throwsexception-mongoose-redis-cache": "0.0.3",
-    "timeago": "^0.1.0",
+    "timeago": "^0.2.0",
     "tripcode": "~1.3.0",
-    "winston": "~0.7.3"
+    "winston": "^0.8.0"
   }
 }
