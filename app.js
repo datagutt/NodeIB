@@ -10,7 +10,8 @@
 	nconf.argv().env();
 	nconf.file('default', path.join('config', path.sep, global.env + '.json'));
 	nconf.set('base_dir', __dirname);
-	nconf.set('client_dir', path.join(nconf.get('base_dir'), path.sep, 'client'));
+	nconf.set('client_dir', path.join(nconf.get('base_dir'), path.sep, '../NodeIB-client'));
+	console.log(path.join(nconf.get('client_dir'), 'public', 'uploads'));
 	nconf.defaults({
 		'api': {
 			'port': 3000,
