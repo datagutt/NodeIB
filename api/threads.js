@@ -49,7 +49,6 @@ var validateVideo = function validateVideo(file, filename, _callback){
 	//console.log('a', file, filename);
 	var uploadPath = nconf.get('api:upload_path'),
 		full = path.join(uploadPath, 'full', filename);
-
 	ffprobe(file.path, function(err, metadata){
 		var errors = [];
 		if(!metadata){
