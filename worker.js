@@ -36,7 +36,7 @@ function setup(app, models){
 	setupRoutes(models);
 
 	app.get('*', function(req, res){
-		res.send([], 404);
+		res.status(404).send([]);
 	});
 }
 
