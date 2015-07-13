@@ -114,7 +114,8 @@ module.exports = function threads(app, api){
 					'size': 0
 				};
 			}
-			req.assert(0, 'File is required').notNull(req.body.file.size);
+			//req.assert(req.body.file, 'File is required').notEmpty();
+			req.assert(0, 'File is required').notEmpty(req.body.file.size);
 		}
 
 		req.sanitize('name').escape();
