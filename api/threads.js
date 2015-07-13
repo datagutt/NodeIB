@@ -247,8 +247,8 @@ module.exports = function(db){
 
 	return {
 		getIndexThreads: function getIndexThreads(board, page, _callback){
-			var page = page ? parseInt(page, 10) : 1,
-				perPage = nconf.get('board:threadsPerpage'),
+			var page = (page && parseInt(page, 10)) ? parseInt(page, 10) : 1,
+				perPage = nconf.get('board:threadsPerPage'),
 				offset = (page - 1) * perPage,
 				find = {};
 
