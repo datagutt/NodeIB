@@ -242,7 +242,7 @@ module.exports = function(db){
 		'model': 'Post',
 		'startAt': 1
 	});
-	PostSchema.set('redisCache', true);
+	PostSchema.set('redisCache', false);
 	Post = db.model('Post', PostSchema);
 
 	return {
